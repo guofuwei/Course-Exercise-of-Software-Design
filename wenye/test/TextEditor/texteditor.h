@@ -22,7 +22,7 @@ class TextEditor :public QTabWidget
 {
     Q_OBJECT
 public:
-    TextEditor();
+    TextEditor(QWidget *parent=nullptr);
     void init();
     void initsci();
     void newpage(QString name);

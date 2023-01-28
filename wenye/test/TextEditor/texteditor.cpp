@@ -2,7 +2,7 @@
 
 
 //http://t.csdn.cn/CHxMr  viewpor
-TextEditor::TextEditor()
+TextEditor::TextEditor(QWidget*parent):QTabWidget (parent)
 {
     m_iseditable=1;
     m_marknumber=0;

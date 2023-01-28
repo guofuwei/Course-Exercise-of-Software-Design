@@ -12,7 +12,7 @@ class GDbProgress:public QProcess
 public:
     GDbProgress();
     QByteArray readoutput();
-    QByteArray run(QString );
+    QByteArray run(QString);
     QByteArray listcode();
     QByteArray StartRun();
     //QByteArray GetLocalInfo();

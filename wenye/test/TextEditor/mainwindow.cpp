@@ -79,7 +79,12 @@ void MainWindow::on_actionlist_triggered()
 
 void MainWindow::on_actiontest_triggered()
 {
-   auto map=m_progress->GetLocalInfo();
+   //auto map=m_progress->GetLocalInfo();
+    m_progress->run("break main");
+    m_progress->run("break 11");
+    m_progress->run("tbreak 12");
+    auto str=m_progress->run("info break\n");
+    auto list=StringHandler::GetBreakPointInfo(str);
 
 }
 

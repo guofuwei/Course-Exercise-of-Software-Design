@@ -6,6 +6,7 @@
 #include <QRegularExpression>
 #include <QMap>
 #include <QPair>
+#include <QDebug>
 
 class StringHandler
 {
@@ -17,6 +18,7 @@ public:
                                                              // =QMap<QString, QPair<QString, QString>>());//获得本地变量的值
     static QMap<QString,QPair<QString,QString>> GetLocalType(QString,QMap<QString, QPair<QString, QString> >&res);
                                                               //=QMap<QString, QPair<QString, QString>>());//获得本地变量的类型
+    static QList<QMap<QString,QString>> GetBreakPointInfo(QString);
 
 };
 

@@ -46,7 +46,8 @@ QString StringHandler::RemoveEndGdb(QString str)
     if(pos==-1)
        return str;
     //qDebug().noquote()<<str.first(pos);
-    return str.first(pos);
+    //str.mid(0,pos);
+    return str.mid(0,pos);
 }
 
 
@@ -78,6 +79,39 @@ QMap<QString, QPair<QString, QString> > StringHandler::GetLocalValue(QString str
 
 QMap<QString, QPair<QString, QString> > StringHandler::GetLocalType(QString str, QMap<QString, QPair<QString, QString> > &res)
 {
+
+
+    return res;
+
+}
+
+QList<QMap<QString, QString> > StringHandler::GetBreakPointInfo(QString  str)
+{
+    QList<QMap<QString, QString> > res;
+    //QRegularExpression exp1("(\d)\s+([a-z]+)\s+([a-z]+)\s+([a-z]+)\s+([a-z\d]+)\s+([a-z\s().:\d]+)");
+    QRegularExpression exp1("(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z\\d]+)\\s+([a-z\\s().:\\d]+?)\n|"
+                            "(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z\\d]+)\\s+([a-z\\s().:\\d]+)$");
+
+    auto i=exp1.globalMatch(str);
+    while(i.hasNext())
+    {
+        QMap<QString, QString> map;
+        auto t=i.next();
+        map["number"]=t.captured(1);
+        map["type"]=t.captured(2);
+        map["keep"]=t.captured(3);
+        map["enable"]=t.captured(4);
+        map["address"]=t.captured(5);
+        qDebug().noquote()<<t.captured(0);
+        qDebug().noquote()<<t.captured(2);
+        qDebug().noquote()<<t.captured(3);
+
+    }
+
+
+
+
+
 
 
     return res;
