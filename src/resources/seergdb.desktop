@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=SeerGdb
+GenericName=Debugger
+Comment=GUI frontend to gdb.
+Exec=seergdb
+Icon=seergdb
+Terminal=false
+Type=Application
+Categories=Development;
