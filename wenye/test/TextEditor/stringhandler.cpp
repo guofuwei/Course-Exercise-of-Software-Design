@@ -16,22 +16,6 @@ QString StringHandler::RemoveNumber(QString str)
     str.remove(exp);
     //qDebug().noquote()<<str;
 
-
-//    auto i=exp.globalMatch(str);
-//    while(i.hasNext())
-//    {
-//        auto match=i.next();
-//        str.remove(match.captured(1));//注意只删除一次
-
-//        if(match.captured(1).indexOf("12")!=-1)
-//        {
-//            qDebug()<<match.captured(1);
-//            qDebug().noquote()<<str;
-//        }
-
-//    }
-
-
     //qDebug().noquote()<<str;
     return str;
 }
@@ -85,7 +69,7 @@ QMap<QString, QPair<QString, QString> > StringHandler::GetLocalType(QString str,
 
 }
 
-QList<QMap<QString, QString> > StringHandler::GetBreakPointInfo(QString  str)
+QList<QMap<QString, QString> > StringHandler::ToBreakPointInfo(QString  str)
 {
     QList<QMap<QString, QString> > res;
     //QRegularExpression exp1("(\d)\s+([a-z]+)\s+([a-z]+)\s+([a-z]+)\s+([a-z\d]+)\s+([a-z\s().:\d]+)");
@@ -102,18 +86,37 @@ QList<QMap<QString, QString> > StringHandler::GetBreakPointInfo(QString  str)
         map["keep"]=t.captured(3);
         map["enable"]=t.captured(4);
         map["address"]=t.captured(5);
-        qDebug().noquote()<<t.captured(0);
-        qDebug().noquote()<<t.captured(2);
-        qDebug().noquote()<<t.captured(3);
-
+        map["file"]=t.captured(6);
+        res.append(map);
     }
-
-
-
-
-
-
-
+    //qDebug()<<res;
     return res;
 
+}
+
+QString StringHandler::ToCurrentFileName(QString str)
+{
+    auto begin=str.indexOf("is")+2;
+    auto end=str.indexOf("Compilation");
+    //qDebug()<<str.mid(begin,end-begin).simplified();
+    return str.mid(begin,end-begin).simplified();
+}
+
+QList<QString> StringHandler::FindBreakPoint(QString str)
+{
+    QList<QString> res;
+    QRegularExpression exp("(Breakpoint|Temporary breakpoint)\\s*(\\d+),\\s*(.*)at(.*):(\\d+)");
+    auto i=exp.globalMatch(str);
+    while(i.hasNext())
+    {
+        auto t=i.next();
+        res<<t.captured(1).simplified();
+        res<<t.captured(2).simplified();
+        res<<t.captured(3).simplified();
+        res<<t.captured(4).simplified();
+        res<<t.captured(5).simplified();
+        return res;
+
+    }
+    return res;
 }

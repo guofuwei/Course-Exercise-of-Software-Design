@@ -45,6 +45,8 @@ private:
     GDbProgress *m_progress;
     LogDialog *m_logdailog;
 
+signals:
+    void runprogram();
 
 };
 #endif // MAINWINDOW_H

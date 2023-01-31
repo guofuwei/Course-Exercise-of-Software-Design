@@ -19,8 +19,14 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void init();
 
+private slots:
+    void on_actionRun_triggered();
+signals:
+    void runprogram();
 private:
     Ui::MainWindow *ui;
+    GDbProgress *m_progress;
 };
 #endif // MAINWINDOW_H

@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_statementlineedit=new QLineEdit();
     m_logdailog=new LogDialog();
 
-    qDebug()<<m_progress->openMode();
+    //qDebug()<<m_progress->openMode();
 
     auto splitter=new QSplitter();
     splitter->addWidget(t);
@@ -29,6 +29,14 @@ MainWindow::MainWindow(QWidget *parent)
    QWidget *widget=new QWidget();
    widget->setLayout(m_laypout);
    this->setCentralWidget(widget);
+
+   auto name=QFileInfo(m_progress->arguments().last()).baseName();
+   t->newpage("t.cpp");
+   t->setcontent(m_progress->listcode());
+
+   connect(this,&MainWindow::runprogram,this->m_progress,&GDbProgress::on_runprogram);
+   connect(this->m_progress,&GDbProgress::setpostion,this->t,&TextEditor::on_setpostion);
+
 
    //this->t->setcontent(m_progress->run(QString("-mi")),-1);
 }
@@ -80,11 +88,10 @@ void MainWindow::on_actionlist_triggered()
 void MainWindow::on_actiontest_triggered()
 {
    //auto map=m_progress->GetLocalInfo();
-    m_progress->run("break main");
-    m_progress->run("break 11");
-    m_progress->run("tbreak 12");
-    auto str=m_progress->run("info break\n");
-    auto list=StringHandler::GetBreakPointInfo(str);
-
+    //this->t->setselected(2);
+   //qDebug()<<m_progress->program();
+    //m_progress->run("break 11\n");
+    //m_progress->run("break 12\n");
+    emit runprogram();
 }
 

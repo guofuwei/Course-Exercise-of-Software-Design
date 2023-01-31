@@ -6,11 +6,12 @@ GDbProgress::GDbProgress()
     //this->setArguments(QStringList()<<"-q"<<".\\test.exe");//-q删除帮助信息
     this->setArguments(QStringList()<<"-q"<<".\\t.exe");
     this->start(QIODevice::ReadWrite);
+    this->run("set height 0\n");
+    GetMainFileName();
 }
 
 QByteArray GDbProgress::readoutput()
 {
-     //qDebug()<<this->state();
      QByteArray bytes,output;
      do
      {
@@ -37,7 +38,7 @@ QByteArray GDbProgress::run(QString statement)
 
 QByteArray GDbProgress::listcode()
 {
-    this->readAll();
+    auto t=this->readAll();
     if(this->state()==QProcess::Running)
     {
         this->write("l 1,1000000\n");
@@ -80,7 +81,6 @@ QMap<QString,QPair<QString,QString>> GDbProgress::GetLocalInfo()
             return res;
         this->write("info local\n");
         StringHandler::GetLocalValue(this->readoutput(),res);
-        //qDebug()<<res;
 
         for(auto name:res.keys())
         {
@@ -90,11 +90,67 @@ QMap<QString,QPair<QString,QString>> GDbProgress::GetLocalInfo()
 
             res[name].second=str;
         }
-        //qDebug().noquote()<<
 
         return res;
     }
     return res;
+}
+
+QList<QMap<QString, QString> > GDbProgress::GetBreakPointInfo()
+{
+    auto str=this->run("info break\n");
+    return StringHandler::ToBreakPointInfo(str);
+}
+
+QString GDbProgress::GetCurrentFileName()
+{
+    auto  output=this->run("info source\n");
+    return StringHandler::ToCurrentFileName(output);
+
+}
+
+QString GDbProgress::GetMainFileName()
+{
+    this->run("tbreak main\n");
+    this->run("run\n");
+    m_filename=GetCurrentFileName();
+    this->run("c\n");
+    return m_filename;
+}
+
+QString GDbProgress::FileName()
+{
+    return m_filename;
+}
+
+void GDbProgress::on_runprogram()
+{
+    QByteArray output;
+    if(isrun==false)
+    {
+      output=this->run("r\n");
+      isrun=true;
+    }
+    else
+    {
+       output=this->run("c\n");
+    }
+    auto str=QString(output);
+    //qDebug().noquote()<<str;
+    //if(str.indexOf())
+
+    if(str.indexOf("exited normally")!=-1)
+    {
+        isrun=false;
+        return;
+    }
+
+    auto list=StringHandler::FindBreakPoint(str);
+    if(list.isEmpty())
+        return;
+    qDebug()<<list;
+    int line=list.at(4).toInt();
+    emit setpostion(list.at(3),line,-1);
 }
 
 

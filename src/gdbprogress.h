@@ -12,15 +12,27 @@ class GDbProgress:public QProcess
 public:
     GDbProgress();
     QByteArray readoutput();
-    QByteArray run(QString );
+    QByteArray run(QString);
     QByteArray listcode();
     QByteArray StartRun();
-    //QByteArray GetLocalInfo();
-    //QByteArray AddBreakPoint(int);
+
+    QByteArray RunNext();
+    QByteArray RunStep();
+
     QMap<QString,QPair<QString,QString>> GetLocalInfo();
+    QList<QMap<QString, QString> > GetBreakPointInfo();
+    QString GetCurrentFileName();
+    QString GetMainFileName();
+    QString FileName();
+public slots:
+    void on_runprogram();
+
 
 private:
     bool isrun=0;
+    QString m_filename;
+signals:
+    void setpostion(QString,int,int);
 };
 
 #endif // GDBPROGRESS_H

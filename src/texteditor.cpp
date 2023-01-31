@@ -9,11 +9,6 @@ TextEditor::TextEditor(QWidget*parent):QTabWidget (parent)
 
     this->setTabsClosable(1);
     connect(this,SIGNAL(tabCloseRequested(int)),this,SLOT(on_table_close(int)));
-
-
-    this->newpage("111");
-    this->newpage("222");
-    this->newpage("333");
 }
 
 void TextEditor::initsci()
@@ -65,6 +60,8 @@ void TextEditor::initsci()
 
 
     sciScintilla->setLexer(textLexer);//给QsciScintilla设置词法分析器
+    sciScintilla->setReadOnly(1);
+
 
 
     sciScintilla->setWrapIndentMode(QsciScintilla::WrapIndentSame);
@@ -132,6 +129,27 @@ void TextEditor::setcontent(QByteArray content, int index)
     m_scilist.at(index)->setText(content);
 }
 
+void TextEditor::setselected(int line, int index)
+{
+    if(index==-1)
+       index=currentIndex();
+    m_scilist.at(index)->setCursorPosition(line,index);
+}
+
+bool TextEditor::changepage(QString name)
+{
+    for(int i=0;i<this->count();i++)
+    {
+        if(this->tabText(i)==name)
+        {
+            this->setCurrentIndex(i);
+            return true;
+        }
+
+    }
+    return false;
+}
+
 void TextEditor::on_margin_clicked(int m, int n, Qt::KeyboardModifiers)
 {
     auto index=this->currentIndex();
@@ -157,5 +175,22 @@ void TextEditor::on_table_close(int index)
     this->m_scilist.at(index)->close();
     this->m_scilist.removeAt(index);
     this->removeTab(index);
+
+}
+
+void TextEditor::on_setpostion(QString name, int line, int index)
+{
+    if(!this->changepage(name))
+    {
+        //发出错误信号
+        return;
+    }
+    auto i=this->currentIndex();
+    //this->m_scilist.at(i)->setSelection(line-1,0,line-1,this->m_scilist.at(i)->lineLength(line));
+    //this->m_scilist.at(i)->indent(line);
+    this->m_scilist.at(i)->clearAnnotations();
+    this->m_scilist.at(i)->annotate(line-1,"here",1);
+
+    this->m_scilist.at(i)->setCursorPosition(line-1,0);
 
 }
