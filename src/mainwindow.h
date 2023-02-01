@@ -23,8 +23,14 @@ public:
 
 private slots:
     void on_actionRun_triggered();
+    void on_actionNext_triggered();
+
+    void on_actionStep_triggered();
+
 signals:
     void runprogram();
+    void next();
+    void step();
 private:
     Ui::MainWindow *ui;
     GDbProgress *m_progress;

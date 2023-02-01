@@ -180,17 +180,39 @@ void TextEditor::on_table_close(int index)
 
 void TextEditor::on_setpostion(QString name, int line, int index)
 {
-    if(!this->changepage(name))
+    auto i=this->currentIndex();
+    if(name.isEmpty())
     {
-        //发出错误信号
+        this->m_scilist.at(i)->clearAnnotations();
         return;
     }
-    auto i=this->currentIndex();
+
+    auto filename=QFileInfo(name).fileName();
+    if(!this->changepage(filename))
+    {
+        //发出错误信号
+        for(auto m_sci:m_scilist)
+        {
+            m_sci->clearAnnotations();
+        }
+        newpage(filename);
+         this->changepage(filename);
+        i=this->currentIndex();
+        emit listcodeforcurrentfile(name,line,index);
+        return;
+    }
+    i=this->currentIndex();
+
     //this->m_scilist.at(i)->setSelection(line-1,0,line-1,this->m_scilist.at(i)->lineLength(line));
     //this->m_scilist.at(i)->indent(line);
     this->m_scilist.at(i)->clearAnnotations();
     this->m_scilist.at(i)->annotate(line-1,"here",1);
-
     this->m_scilist.at(i)->setCursorPosition(line-1,0);
+}
 
+void TextEditor::on_sendcontent(QString str, QString name, int line, int index)
+{
+    auto i=this->currentIndex();
+    this->m_scilist.at(i)->setText(str);
+    on_setpostion(name,line,index);
 }

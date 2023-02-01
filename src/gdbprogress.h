@@ -21,17 +21,24 @@ public:
 
     QMap<QString,QPair<QString,QString>> GetLocalInfo();
     QList<QMap<QString, QString> > GetBreakPointInfo();
+
+
+    QList<QString>  GetLocalPos();
     QString GetCurrentFileName();
     QString GetMainFileName();
     QString FileName();
 public slots:
     void on_runprogram();
+    void on_next();
+    void on_step();
+    void on_listcodeforcurrentfile(QString,int,int);
 
 
 private:
     bool isrun=0;
     QString m_filename;
 signals:
+    void setcontent(QString,QString,int,int);
     void setpostion(QString,int,int);
 };
 
