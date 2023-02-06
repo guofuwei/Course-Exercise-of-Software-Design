@@ -6,9 +6,12 @@ TextEditor::TextEditor(QWidget*parent):QTabWidget (parent)
 {
     m_iseditable=1;
     m_marknumber=0;
+    this->m_imagerihtarrow=QImage("://resources/icons-icons/arrow-right.png").scaled(QSize(16,16));
+
 
     this->setTabsClosable(1);
     connect(this,SIGNAL(tabCloseRequested(int)),this,SLOT(on_table_close(int)));
+
 }
 
 void TextEditor::initsci()
@@ -61,6 +64,8 @@ void TextEditor::initsci()
 
     sciScintilla->setLexer(textLexer);//给QsciScintilla设置词法分析器
     sciScintilla->setReadOnly(1);
+    sciScintilla->markerDefine(m_imagerihtarrow,2);
+    sciScintilla->markerDefine(QsciScintilla::Circle,1);
 
 
 
@@ -91,7 +96,7 @@ void TextEditor::initsci()
     sciScintilla->setWrapMode(QsciScintilla::WrapWord);
     sciScintilla->setMarginSensitivity(1, true);
     sciScintilla->setMarginsBackgroundColor(QColor("#bbfaae"));
-    sciScintilla->setMarginMarkerMask(1, 0x02);
+    sciScintilla->setMarginMarkerMask(1, 0b00110);
     sciScintilla->markerDefine(QsciScintilla::Circle,1);
     connect(sciScintilla, SIGNAL(marginClicked(int, int, Qt::KeyboardModifiers)),this,
             SLOT(on_margin_clicked(int, int, Qt::KeyboardModifiers)));
@@ -156,12 +161,16 @@ void TextEditor::on_margin_clicked(int m, int n, Qt::KeyboardModifiers)
     auto m_sci=m_scilist.at(index);
     if((m_sci->markersAtLine(n)&0x02)==2)//获取对应行的mask
     {
-        m_sci->markerDelete(n,m);
+        m_sci->markerDelete(n,1);
+        emit removebreakpoint(this->tabText(index),n+1);
     }
     else
     {
     //m_sci->markerDefine(QsciScintilla::Circle,1);
     m_sci->markerAdd(n,1);
+    emit addbreakpoint(this->tabText(index),n+1);
+    //m_sci->markerAdd(n,2);
+
     }
     qDebug()<<n<<"\t"<<m;
     m_sci->autoCompleteFromDocument();
@@ -181,9 +190,10 @@ void TextEditor::on_table_close(int index)
 void TextEditor::on_setpostion(QString name, int line, int index)
 {
     auto i=this->currentIndex();
+    this->m_scilist.at(i)->markerDeleteAll(2);
     if(name.isEmpty())
     {
-        this->m_scilist.at(i)->clearAnnotations();
+
         return;
     }
 
@@ -193,10 +203,11 @@ void TextEditor::on_setpostion(QString name, int line, int index)
         //发出错误信号
         for(auto m_sci:m_scilist)
         {
-            m_sci->clearAnnotations();
+            //m_sci->clearAnnotations();
+            m_sci->markerDeleteAll(2);
         }
         newpage(filename);
-         this->changepage(filename);
+        this->changepage(filename);
         i=this->currentIndex();
         emit listcodeforcurrentfile(name,line,index);
         return;
@@ -205,8 +216,14 @@ void TextEditor::on_setpostion(QString name, int line, int index)
 
     //this->m_scilist.at(i)->setSelection(line-1,0,line-1,this->m_scilist.at(i)->lineLength(line));
     //this->m_scilist.at(i)->indent(line);
-    this->m_scilist.at(i)->clearAnnotations();
-    this->m_scilist.at(i)->annotate(line-1,"here",1);
+
+
+    //this->m_scilist.at(i)->clearAnnotations();
+    //this->m_scilist.at(i)->annotate(line-1,"here",1);
+
+    this->m_scilist.at(i)->markerDeleteAll(2);
+    this->m_scilist.at(i)->markerAdd(line-1,2);
+
     this->m_scilist.at(i)->setCursorPosition(line-1,0);
 }
 

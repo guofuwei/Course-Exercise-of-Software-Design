@@ -213,12 +213,61 @@ void GDbProgress::on_step()
 
 }
 
+void GDbProgress::on_finish()
+{
+    if(isrun==false)
+    {
+        //提示
+        qDebug()<<"no run";
+        return;
+    }
+    auto str=this->run("finish\n");
+    if(str.indexOf("finish not meaningful in the outermost frame")!=-1)
+    {
+        qDebug()<<str;
+
+        qDebug()<<"no frame";
+    }
+    auto list=this->GetLocalPos();
+    if(list.isEmpty())
+    {
+        return;
+    }
+    emit setpostion(list.at(0),list.at(1).toInt(),-1);
+
+
+}
+
 void GDbProgress::on_listcodeforcurrentfile(QString name, int line , int index)
 {
 
     //emit setpostion(name,line,index);
     emit setcontent(this->listcode(),name,line,index);
 
+}
+
+void GDbProgress::on_addbreakpoint(QString filename, int line)
+{
+    QString statement("b ");
+    statement+=filename;
+    statement+=":";
+    statement+=QString::number(line);
+    statement+="\n";
+    auto res=this->run(statement);
+    qDebug()<<res;
+
+
+}
+
+void GDbProgress::on_removebreakpoint(QString filename, int line)
+{
+    QString statement("clear ");
+    statement+=filename;
+    statement+=":";
+    statement+=QString::number(line);
+    statement+="\n";
+    auto res=this->run(statement);
+    qDebug()<<res;
 }
 
 

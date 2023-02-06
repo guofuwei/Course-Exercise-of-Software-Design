@@ -31,7 +31,10 @@ public slots:
     void on_runprogram();
     void on_next();
     void on_step();
+    void on_finish();
     void on_listcodeforcurrentfile(QString,int,int);
+    void on_addbreakpoint(QString,int);
+    void on_removebreakpoint(QString,int);
 
 
 private:
