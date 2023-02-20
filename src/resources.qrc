@@ -48,6 +48,5 @@
         <file>resources/thenounproject/memory.svg</file>
         <file>resources/thenounproject/source.svg</file>
         <file>resources/thenounproject/stop.svg</file>
-        <file>resources/icons-icons/arrow-right.png</file>
     </qresource>
 </RCC>
