@@ -14,6 +14,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QFileInfo>
+#include <QWaitCondition>
 
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexercpp.h>
@@ -39,7 +40,9 @@ private slots:
     void on_table_close(int index);
 public slots:
     void on_setpostion(QString name,int line,int index=-1);
-
+    void on_sendcontent(QString,QString,int,int);
+signals:
+    void listcodeforcurrentfile(QString,int,int);
 private:
     QPlainTextEdit* m_editor;
     bool m_iseditable;

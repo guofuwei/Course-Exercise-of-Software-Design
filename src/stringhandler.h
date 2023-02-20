@@ -21,6 +21,7 @@ public:
     static QList<QMap<QString,QString>> ToBreakPointInfo(QString);
     static QString ToCurrentFileName(QString);
     static QList<QString> FindBreakPoint(QString);
+    static QList<QString> FindLocalPos(QString);
 
 };
 

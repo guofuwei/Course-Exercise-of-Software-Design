@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <widget class="QSplitter" name="splitter_3">
+     <widget class="QSplitter" name="splittermain">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -26,20 +26,12 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QSplitter" name="splitter">
+         <widget class="QSplitter" name="splitterleft">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QGroupBox" name="groupBox_4">
-           <property name="title">
-            <string>GroupBox</string>
-           </property>
-          </widget>
-          <widget class="QGroupBox" name="groupBox_5">
-           <property name="title">
-            <string>GroupBox</string>
-           </property>
-          </widget>
+          <widget class="QTabWidget" name="GuiTabWidgetLeftTop"/>
+          <widget class="QTabWidget" name="GuiTabWidgetLeftBottom"/>
          </widget>
         </item>
        </layout>
@@ -50,18 +42,27 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QSplitter" name="splitter_2">
+         <widget class="QSplitter" name="splittermiddle">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QGroupBox" name="groupBox_6">
-           <property name="title">
-            <string>GroupBox</string>
+          <widget class="TextEditor" name="GuiTextEditor">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
           </widget>
-          <widget class="QGroupBox" name="groupBox_7">
-           <property name="title">
-            <string>GroupBox</string>
+          <widget class="QTabWidget" name="GuiTabWidgetMiddleTop">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
           </widget>
          </widget>
@@ -199,6 +200,17 @@
    </property>
   </action>
  </widget>
+<<<<<<< HEAD
+=======
+ <customwidgets>
+  <customwidget>
+   <class>TextEditor</class>
+   <extends>QTabWidget</extends>
+   <header location="global">texteditor.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+>>>>>>> dev
  <resources>
   <include location="resources.qrc"/>
  </resources>

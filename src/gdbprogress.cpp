@@ -4,9 +4,10 @@ GDbProgress::GDbProgress()
 {
     this->setProgram(".\\bin\\gdb.exe");
     //this->setArguments(QStringList()<<"-q"<<".\\test.exe");//-q删除帮助信息
-    this->setArguments(QStringList()<<"-q"<<".\\t.exe");
+    this->setArguments(QStringList()<<"-q"<<".\\test.exe");
     this->start(QIODevice::ReadWrite);
     this->run("set height 0\n");
+    GetMainFileName();
 }
 
 QByteArray GDbProgress::readoutput()
@@ -101,11 +102,33 @@ QList<QMap<QString, QString> > GDbProgress::GetBreakPointInfo()
     return StringHandler::ToBreakPointInfo(str);
 }
 
+QList<QString> GDbProgress::GetLocalPos()
+{
+    QList<QString> res;
+    QString str=this->run("where\n");
+    res=StringHandler::FindLocalPos(str);
+    return res;
+}
+
 QString GDbProgress::GetCurrentFileName()
 {
     auto  output=this->run("info source\n");
     return StringHandler::ToCurrentFileName(output);
 
+}
+
+QString GDbProgress::GetMainFileName()
+{
+    this->run("tbreak main\n");
+    this->run("run\n");
+    m_filename=GetCurrentFileName();
+    this->run("c\n");
+    return m_filename;
+}
+
+QString GDbProgress::FileName()
+{
+    return m_filename;
 }
 
 void GDbProgress::on_runprogram()
@@ -127,6 +150,7 @@ void GDbProgress::on_runprogram()
     if(str.indexOf("exited normally")!=-1)
     {
         isrun=false;
+        emit setpostion("",0,0);
         return;
     }
 
@@ -136,6 +160,65 @@ void GDbProgress::on_runprogram()
     qDebug()<<list;
     int line=list.at(4).toInt();
     emit setpostion(list.at(3),line,-1);
+}
+
+void GDbProgress::on_next()
+{
+    if(isrun==false)
+    {
+        //提示
+        qDebug()<<"no run";
+        return;
+    }
+
+    auto str=this->run("n\n");//有待输出
+    //当输出存在std::string 存在闪回
+    //https://stackoom.com/cn_en/question/k3qu
+    if(str.indexOf("exited normally")!=-1)
+    {
+        isrun=false;
+        emit setpostion("",0,0);
+        return;
+    }
+    auto list=this->GetLocalPos();
+    if(list.isEmpty())
+    {
+        return;
+    }
+    emit setpostion(list.at(0),list.at(1).toInt(),-1);
+
+}
+
+void GDbProgress::on_step()
+{
+    if(isrun==false)
+    {
+        //提示
+        qDebug()<<"no run";
+        return;
+    }
+    auto str=this->run("s\n");
+    if(str.indexOf("exited normally")!=-1)
+    {
+        isrun=false;
+        emit setpostion("",0,0);
+        return;
+    }
+    auto list=this->GetLocalPos();
+    if(list.isEmpty())
+    {
+        return;
+    }
+    emit setpostion(list.at(0),list.at(1).toInt(),-1);
+
+}
+
+void GDbProgress::on_listcodeforcurrentfile(QString name, int line , int index)
+{
+
+    //emit setpostion(name,line,index);
+    emit setcontent(this->listcode(),name,line,index);
+
 }
 
 
