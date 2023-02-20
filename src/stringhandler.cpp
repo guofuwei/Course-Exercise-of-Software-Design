@@ -124,7 +124,9 @@ QList<QString> StringHandler::FindBreakPoint(QString str)
 QList<QString> StringHandler::FindLocalPos(QString str)
 {
     QList<QString> res;
-    QRegularExpression exp("#\\d+\\s*.*at\\s+(.*):(\\d+)");
+    QRegularExpression exp("#\\d+\\s*[\\d\\D]*?at\\s+(.*):(\\d+)");
+    //
+    //#\\d+\\s*.*at\\s+(.*):(\\d+)
     auto i=exp.globalMatch(str);
     while(i.hasNext())
     {

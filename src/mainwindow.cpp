@@ -42,4 +42,46 @@ void MainWindow::on_actionRun_triggered() { emit runprogram(); }
 
 void MainWindow::on_actionNext_triggered() { emit next(); }
 
+<<<<<<< HEAD
 void MainWindow::on_actionStep_triggered() { emit step(); }
+=======
+//测试
+    ui->GuiTextEditor->newpage(m_progress->FileName());
+    ui->GuiTextEditor->setcontent(m_progress->listcode());
+
+   // m_progress->run("b main");
+    //m_progress->run("b add");
+//测试
+
+    connect(this,&MainWindow::runprogram,this->m_progress,&GDbProgress::on_runprogram);
+    connect(this,&MainWindow::next,this->m_progress,&GDbProgress::on_next);
+    connect(this,&MainWindow::step,this->m_progress,&GDbProgress::on_step);
+    connect(this->m_progress,&GDbProgress::setpostion,this->ui->GuiTextEditor,&TextEditor::on_setpostion);
+    connect(this->m_progress,&GDbProgress::setcontent,this->ui->GuiTextEditor,&TextEditor::on_sendcontent);
+    connect(this->ui->GuiTextEditor,&TextEditor::listcodeforcurrentfile,this->m_progress,&GDbProgress::on_listcodeforcurrentfile);
+    connect(this->ui->GuiTextEditor,&TextEditor::addbreakpoint,this->m_progress,&GDbProgress::on_addbreakpoint);
+    connect(this->ui->GuiTextEditor,&TextEditor::removebreakpoint,this->m_progress,&GDbProgress::on_removebreakpoint);
+
+//    connect(this,&MainWindow::runprogram,this->m_progress,&GDbProgress::on_runprogram);
+//    connect(this->m_progress,&GDbProgress::setpostion,this->ui->GuiTextEditor,&TextEditor::on_setpostion);
+}
+
+
+void MainWindow::on_actionRun_triggered()
+{
+    emit runprogram();
+}
+
+
+void MainWindow::on_actionNext_triggered()
+{
+    emit next();
+}
+
+
+void MainWindow::on_actionStep_triggered()
+{
+    emit step();
+}
+
+>>>>>>> wenye

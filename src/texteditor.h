@@ -43,6 +43,8 @@ public slots:
     void on_sendcontent(QString,QString,int,int);
 signals:
     void listcodeforcurrentfile(QString,int,int);
+    void addbreakpoint(QString,int);
+    void removebreakpoint(QString,int);
 private:
     QPlainTextEdit* m_editor;
     bool m_iseditable;
@@ -52,6 +54,7 @@ private:
     QsciScintilla *m_sci;
 
     int m_marknumber;
+    QImage m_imagerihtarrow;
 };
 
 #endif // TEXTEDITOR_H
