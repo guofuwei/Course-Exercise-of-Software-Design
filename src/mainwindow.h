@@ -10,11 +10,12 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+  class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
   Q_OBJECT
 
 public:
@@ -25,7 +26,6 @@ public:
 private slots:
   void on_actionRun_triggered();
   void on_actionNext_triggered();
-
   void on_actionStep_triggered();
 
 signals:

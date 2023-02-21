@@ -6,8 +6,7 @@
 #include <QDir>
 #include "stringhandler.h"
 
-
-class GDbProgress: public QProcess
+class GDbProgress : public QProcess
 {
   Q_OBJECT
 public:
@@ -21,10 +20,9 @@ public:
   QByteArray RunStep();
 
   QMap<QString, QPair<QString, QString>> GetLocalInfo();
-  QList<QMap<QString, QString> > GetBreakPointInfo();
+  QList<QMap<QString, QString>> GetBreakPointInfo();
 
-
-  QList<QString>  GetLocalPos();
+  QList<QString> GetLocalPos();
   QString GetCurrentFileName();
   QString GetMainFileName();
   QString FileName();
@@ -36,7 +34,6 @@ public slots:
   void on_listcodeforcurrentfile(QString, int, int);
   void on_addbreakpoint(QString, int);
   void on_removebreakpoint(QString, int);
-
 
 private:
   bool isrun = 0;

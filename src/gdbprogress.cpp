@@ -4,7 +4,7 @@ GDbProgress::GDbProgress()
 {
   this->setProgram("gdb.exe");
   this->setArguments(QStringList() << "-q"
-                     << ".\\test.exe");
+                                   << ".\\test.exe");
   this->start(QIODevice::ReadWrite);
   qDebug() << this->state();
   qDebug() << QDir::currentPath();
@@ -15,7 +15,8 @@ GDbProgress::GDbProgress()
 QByteArray GDbProgress::readoutput()
 {
   QByteArray bytes, output;
-  do {
+  do
+  {
     this->waitForReadyRead(1000);
     bytes = this->readAll();
     output += bytes;
@@ -26,11 +27,13 @@ QByteArray GDbProgress::readoutput()
 QByteArray GDbProgress::run(QString statement)
 {
   if (!statement.isEmpty() &&
-      (statement.at(statement.length() - 1) != QChar('\n'))) {
+      (statement.at(statement.length() - 1) != QChar('\n')))
+  {
     statement += "\n";
   }
   QString watch = this->readAll();
-  if (this->state() == QProcess::Running) {
+  if (this->state() == QProcess::Running)
+  {
     this->write(statement.toLatin1());
     return this->readoutput();
   }
@@ -40,7 +43,8 @@ QByteArray GDbProgress::run(QString statement)
 QByteArray GDbProgress::listcode()
 {
   auto t = this->readAll();
-  if (this->state() == QProcess::Running) {
+  if (this->state() == QProcess::Running)
+  {
     this->write("l 1,1000000\n");
     QString res = this->readoutput();
     res = StringHandler::RemoveNumber(res);
@@ -53,8 +57,10 @@ QByteArray GDbProgress::listcode()
 QByteArray GDbProgress::StartRun()
 {
   this->readAll();
-  if (this->state() == QProcess::Running) {
-    if (isrun == true) {
+  if (this->state() == QProcess::Running)
+  {
+    if (isrun == true)
+    {
       return QString("the program is running").toLatin1();
     }
     this->write("tbreak main\n");
@@ -71,17 +77,20 @@ QMap<QString, QPair<QString, QString>> GDbProgress::GetLocalInfo()
 {
   QMap<QString, QPair<QString, QString>> res;
   this->readAll();
-  if (this->state() == QProcess::Running) {
-    if (isrun == false) {
+  if (this->state() == QProcess::Running)
+  {
+    if (isrun == false)
+    {
       return res;
     }
     this->write("info local\n");
     StringHandler::GetLocalValue(this->readoutput(), res);
-    for (auto name : res.keys()) {
+    for (auto name : res.keys())
+    {
       this->write(QString("whatis " + name + "\n").toLatin1());
       auto str = this->readoutput();
       str = str.mid(str.indexOf("=") + 1, str.indexOf("\n") - str.indexOf("="))
-            .simplified();
+                .simplified();
       res[name].second = str;
     }
     return res;
@@ -111,7 +120,7 @@ QString GDbProgress::GetCurrentFileName()
 
 QString GDbProgress::GetMainFileName()
 {
-  //qDebug() << this->run("break 6\n");
+  // qDebug() << this->run("break 6\n");
   qDebug() << this->run("tbreak 2\n");
   // qDebug() << this->run("y\n");
   qDebug() << this->run("run\n");
@@ -125,22 +134,27 @@ QString GDbProgress::FileName() { return m_filename; }
 void GDbProgress::on_runprogram()
 {
   QByteArray output;
-  if (isrun == false) {
+  if (isrun == false)
+  {
     output = this->run("r\n");
     isrun = true;
-  } else {
+  }
+  else
+  {
     output = this->run("c\n");
   }
   auto str = QString(output);
   // qDebug().noquote()<<str;
   // if(str.indexOf())
-  if (str.indexOf("exited normally") != -1) {
+  if (str.indexOf("exited normally") != -1)
+  {
     isrun = false;
     emit setpostion("", 0, 0);
     return;
   }
   auto list = StringHandler::FindBreakPoint(str);
-  if (list.isEmpty()) {
+  if (list.isEmpty())
+  {
     return;
   }
   qDebug() << list;
@@ -150,7 +164,8 @@ void GDbProgress::on_runprogram()
 
 void GDbProgress::on_next()
 {
-  if (isrun == false) {
+  if (isrun == false)
+  {
     // 提示
     qDebug() << "no run";
     return;
@@ -158,13 +173,15 @@ void GDbProgress::on_next()
   auto str = this->run("n\n"); // 有待输出
   // 当输出存在std::string 存在闪回
   // https://stackoom.com/cn_en/question/k3qu
-  if (str.indexOf("exited normally") != -1) {
+  if (str.indexOf("exited normally") != -1)
+  {
     isrun = false;
     emit setpostion("", 0, 0);
     return;
   }
   auto list = this->GetLocalPos();
-  if (list.isEmpty()) {
+  if (list.isEmpty())
+  {
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
@@ -172,19 +189,22 @@ void GDbProgress::on_next()
 
 void GDbProgress::on_step()
 {
-  if (isrun == false) {
+  if (isrun == false)
+  {
     // 提示
     qDebug() << "no run";
     return;
   }
   auto str = this->run("s\n");
-  if (str.indexOf("exited normally") != -1) {
+  if (str.indexOf("exited normally") != -1)
+  {
     isrun = false;
     emit setpostion("", 0, 0);
     return;
   }
   auto list = this->GetLocalPos();
-  if (list.isEmpty()) {
+  if (list.isEmpty())
+  {
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
@@ -192,18 +212,21 @@ void GDbProgress::on_step()
 
 void GDbProgress::on_finish()
 {
-  if (isrun == false) {
+  if (isrun == false)
+  {
     // 提示
     qDebug() << "no run";
     return;
   }
   auto str = this->run("finish\n");
-  if (str.indexOf("finish not meaningful in the outermost frame") != -1) {
+  if (str.indexOf("finish not meaningful in the outermost frame") != -1)
+  {
     qDebug() << str;
     qDebug() << "no frame";
   }
   auto list = this->GetLocalPos();
-  if (list.isEmpty()) {
+  if (list.isEmpty())
+  {
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
