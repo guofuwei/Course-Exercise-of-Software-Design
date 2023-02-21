@@ -20,7 +20,7 @@ void MainWindow::init()
   // 测试
   ui->GuiTextEditor->newpage(m_progress->FileName());
   ui->GuiTextEditor->setcontent(m_progress->listcode());
-  m_progress->run("b main");
+  //m_progress->run("b main");
   // m_progress->run("b add");
   // 测试
   connect(this, &MainWindow::runprogram, this->m_progress,
