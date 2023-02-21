@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -33,6 +33,8 @@ void MainWindow::init()
           &TextEditor::on_sendcontent);
   connect(this->ui->GuiTextEditor, &TextEditor::listcodeforcurrentfile,
           this->m_progress, &GDbProgress::on_listcodeforcurrentfile);
+  connect(this->ui->GuiTextEditor,&TextEditor::addbreakpoint,this->m_progress,&GDbProgress::on_addbreakpoint);
+  connect(this->ui->GuiTextEditor,&TextEditor::removebreakpoint,this->m_progress,&GDbProgress::on_removebreakpoint);
   //    connect(this,&MainWindow::runprogram,this->m_progress,&GDbProgress::on_runprogram);
   //    connect(this->m_progress,&GDbProgress::setpostion,this->ui->GuiTextEditor,&TextEditor::on_setpostion);
 }
