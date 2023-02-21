@@ -3,46 +3,47 @@
 #include <QProcess>
 #include <QDebug>
 #include <QPair>
+#include <QDir>
 #include "stringhandler.h"
 
 
-class GDbProgress:public QProcess
+class GDbProgress: public QProcess
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    GDbProgress();
-    QByteArray readoutput();
-    QByteArray run(QString);
-    QByteArray listcode();
-    QByteArray StartRun();
+  GDbProgress();
+  QByteArray readoutput();
+  QByteArray run(QString);
+  QByteArray listcode();
+  QByteArray StartRun();
 
-    QByteArray RunNext();
-    QByteArray RunStep();
+  QByteArray RunNext();
+  QByteArray RunStep();
 
-    QMap<QString,QPair<QString,QString>> GetLocalInfo();
-    QList<QMap<QString, QString> > GetBreakPointInfo();
+  QMap<QString, QPair<QString, QString>> GetLocalInfo();
+  QList<QMap<QString, QString> > GetBreakPointInfo();
 
 
-    QList<QString>  GetLocalPos();
-    QString GetCurrentFileName();
-    QString GetMainFileName();
-    QString FileName();
+  QList<QString>  GetLocalPos();
+  QString GetCurrentFileName();
+  QString GetMainFileName();
+  QString FileName();
 public slots:
-    void on_runprogram();
-    void on_next();
-    void on_step();
-    void on_finish();
-    void on_listcodeforcurrentfile(QString,int,int);
-    void on_addbreakpoint(QString,int);
-    void on_removebreakpoint(QString,int);
+  void on_runprogram();
+  void on_next();
+  void on_step();
+  void on_finish();
+  void on_listcodeforcurrentfile(QString, int, int);
+  void on_addbreakpoint(QString, int);
+  void on_removebreakpoint(QString, int);
 
 
 private:
-    bool isrun=0;
-    QString m_filename;
+  bool isrun = 0;
+  QString m_filename;
 signals:
-    void setcontent(QString,QString,int,int);
-    void setpostion(QString,int,int);
+  void setcontent(QString, QString, int, int);
+  void setpostion(QString, int, int);
 };
 
 #endif // GDBPROGRESS_H
