@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSplitter>
+#include <QTreeWidget>
 
 // #include "texteditor.h"
 #include "gdbprogress.h"
@@ -21,13 +22,14 @@ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
   void init();
+  void BreakPointTreeWidgetUpdate();
 
 private slots:
   void on_actionRun_triggered();
   void on_actionNext_triggered();
   void on_actionStep_triggered();
-
   void on_actionFinish_triggered();
+  void on_update();
 
 signals:
   void runprogram();

@@ -16,7 +16,7 @@ QByteArray GDbProgress::readoutput()
 {
   QByteArray bytes, output;
   do {
-    this->waitForReadyRead(500);
+    this->waitForReadyRead(400);
     bytes = this->readAll();
     output += bytes;
   } while (!bytes.isEmpty());
@@ -112,9 +112,9 @@ QString GDbProgress::GetCurrentFileName()
 QString GDbProgress::GetMainFileName()
 {
   //qDebug() << this->run("break 6\n");
-  qDebug() << this->run("tbreak 2\n");
+   this->run("tbreak 2\n");
   // qDebug() << this->run("y\n");
-  qDebug() << this->run("run\n");
+  this->run("run\n");
   m_filename = GetCurrentFileName();
   this->run("c\n");
   return m_filename;
@@ -137,6 +137,7 @@ void GDbProgress::on_runprogram()
   if (str.indexOf("exited normally") != -1) {
     isrun = false;
     emit setpostion("", 0, 0);
+    emit update();
     return;
   }
   auto list = StringHandler::FindBreakPoint(str);
@@ -146,6 +147,7 @@ void GDbProgress::on_runprogram()
   qDebug() << list;
   int line = list.at(4).toInt();
   emit setpostion(list.at(3), line, -1);
+  emit update();
 }
 
 void GDbProgress::on_next()
@@ -161,6 +163,7 @@ void GDbProgress::on_next()
   if (str.indexOf("exited normally") != -1) {
     isrun = false;
     emit setpostion("", 0, 0);
+    emit update();
     return;
   }
   auto list = this->GetLocalPos();
@@ -168,6 +171,7 @@ void GDbProgress::on_next()
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
+  emit update();
 }
 
 void GDbProgress::on_step()
@@ -181,6 +185,7 @@ void GDbProgress::on_step()
   if (str.indexOf("exited normally") != -1) {
     isrun = false;
     emit setpostion("", 0, 0);
+    emit update();
     return;
   }
   auto list = this->GetLocalPos();
@@ -188,6 +193,7 @@ void GDbProgress::on_step()
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
+  emit update();
 }
 
 void GDbProgress::on_finish()
@@ -207,6 +213,7 @@ void GDbProgress::on_finish()
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
+  emit update();
 }
 
 void GDbProgress::on_listcodeforcurrentfile(QString name, int line, int index)

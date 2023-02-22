@@ -30,6 +30,7 @@ void MainWindow::init()
   connect(this, &MainWindow::finish, this->m_progress, &GDbProgress::on_finish);
   connect(this->m_progress, &GDbProgress::setpostion, this->ui->GuiTextEditor,
           &TextEditor::on_setpostion);
+  connect(this->m_progress, &GDbProgress::update, this,&MainWindow::on_update);
   connect(this->m_progress, &GDbProgress::setcontent, this->ui->GuiTextEditor,
           &TextEditor::on_sendcontent);
   connect(this->ui->GuiTextEditor, &TextEditor::listcodeforcurrentfile,
@@ -38,6 +39,30 @@ void MainWindow::init()
   connect(this->ui->GuiTextEditor,&TextEditor::removebreakpoint,this->m_progress,&GDbProgress::on_removebreakpoint);
   //    connect(this,&MainWindow::runprogram,this->m_progress,&GDbProgress::on_runprogram);
   //    connect(this->m_progress,&GDbProgress::setpostion,this->ui->GuiTextEditor,&TextEditor::on_setpostion);
+}
+
+void MainWindow::BreakPointTreeWidgetUpdate()
+{
+    auto map=this->m_progress->GetBreakPointInfo();
+    ui->breakpointsTreeWidget->clear();
+    for(auto breakpoint:map)
+    {
+        QString  str;
+        QTreeWidgetItem *t=new QTreeWidgetItem();
+        t->setText(0,breakpoint["number"]);
+        t->setText(1,breakpoint["type"]);
+        t->setText(2,breakpoint["keep"]);
+        t->setText(3,breakpoint["enable"]);
+        t->setText(4,breakpoint["address"]);
+        auto begin=breakpoint["file"].indexOf("in ")+3;
+        auto end=breakpoint["file"].indexOf("at");
+        str=breakpoint["file"].mid(begin,end-begin);
+        t->setText(5,str);
+        str=breakpoint["file"].mid(end+2);
+        t->setText(6,str);
+        ui->breakpointsTreeWidget->addTopLevelItem(t);
+    }
+
 }
 
 void MainWindow::on_actionRun_triggered() { emit runprogram(); }
@@ -49,5 +74,10 @@ void MainWindow::on_actionStep_triggered() { emit step(); }
 void MainWindow::on_actionFinish_triggered()
 {
     emit finish();
+}
+
+void MainWindow::on_update()
+{
+    BreakPointTreeWidgetUpdate();
 }
 
