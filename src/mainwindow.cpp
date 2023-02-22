@@ -43,9 +43,9 @@ void MainWindow::init()
 
 void MainWindow::BreakPointTreeWidgetUpdate()
 {
-    auto map=this->m_progress->GetBreakPointInfo();
+    auto list=this->m_progress->GetBreakPointInfo();
     ui->breakpointsTreeWidget->clear();
-    for(auto breakpoint:map)
+    for(auto breakpoint:list)
     {
         QString  str;
         QTreeWidgetItem *t=new QTreeWidgetItem();
@@ -65,6 +65,23 @@ void MainWindow::BreakPointTreeWidgetUpdate()
 
 }
 
+void MainWindow::LocalsTreeWidgetUpdate()
+{
+    auto map=this->m_progress->GetLocalInfo();
+    ui->localsTreeWidget->clear();
+    for(auto iter=map.begin();iter!=map.end();iter++)
+    {
+        QTreeWidgetItem *t=new QTreeWidgetItem();
+        t->setText(0,iter.key());
+        t->setText(1,iter.value().second);
+        t->setText(2,iter.value().first);
+        ui->localsTreeWidget->addTopLevelItem(t);
+    }
+
+
+
+}
+
 void MainWindow::on_actionRun_triggered() { emit runprogram(); }
 
 void MainWindow::on_actionNext_triggered() { emit next(); }
@@ -79,5 +96,6 @@ void MainWindow::on_actionFinish_triggered()
 void MainWindow::on_update()
 {
     BreakPointTreeWidgetUpdate();
+    LocalsTreeWidgetUpdate();
 }
 

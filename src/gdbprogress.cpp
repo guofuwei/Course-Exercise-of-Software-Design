@@ -4,7 +4,7 @@ GDbProgress::GDbProgress()
 {
   this->setProgram("gdb.exe");
   this->setArguments(QStringList() << "-q"
-                     << ".\\test.exe");
+                     << ".\\t2.exe");
   this->start(QIODevice::ReadWrite);
   qDebug() << this->state();
   qDebug() << QDir::currentPath();
@@ -16,7 +16,7 @@ QByteArray GDbProgress::readoutput()
 {
   QByteArray bytes, output;
   do {
-    this->waitForReadyRead(400);
+    this->waitForReadyRead(350);
     bytes = this->readAll();
     output += bytes;
   } while (!bytes.isEmpty());
@@ -70,6 +70,7 @@ QByteArray GDbProgress::StartRun()
 QMap<QString, QPair<QString, QString>> GDbProgress::GetLocalInfo()
 {
   QMap<QString, QPair<QString, QString>> res;
+  QString statement;
   this->readAll();
   if (this->state() == QProcess::Running) {
     if (isrun == false) {
@@ -77,15 +78,23 @@ QMap<QString, QPair<QString, QString>> GDbProgress::GetLocalInfo()
     }
     this->write("info local\n");
     StringHandler::GetLocalValue(this->readoutput(), res);
+
     for (auto name : res.keys()) {
-      this->write(QString("whatis " + name + "\n").toLatin1());
-      auto str = this->readoutput();
-      str = str.mid(str.indexOf("=") + 1, str.indexOf("\n") - str.indexOf("="))
-            .simplified();
-      res[name].second = str;
+        statement+=QString("whatis " + name + "\n").toLatin1();
     }
+    QString str =this->run(statement);
+
+    for(auto name : res.keys())
+    {
+        auto t= str.mid(str.indexOf("=") + 1, str.indexOf("\n") - str.indexOf("="))
+                   .simplified();
+        res[name].second = t;
+        str=str.mid(str.indexOf("\n")+1);
+    }
+
     return res;
   }
+
   return res;
 }
 

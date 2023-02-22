@@ -23,6 +23,7 @@ public:
   ~MainWindow();
   void init();
   void BreakPointTreeWidgetUpdate();
+  void LocalsTreeWidgetUpdate();
 
 private slots:
   void on_actionRun_triggered();
