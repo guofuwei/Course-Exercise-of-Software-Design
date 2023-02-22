@@ -58,3 +58,4 @@ release
 *.exe
 .qmake.stash
 .vscode
+.cache
