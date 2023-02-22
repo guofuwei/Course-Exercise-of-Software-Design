@@ -67,8 +67,42 @@
           </widget>
           <widget class="QTabWidget" name="GuiTabWidgetLeftBottom">
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
+           <widget class="QWidget" name="LocalsWidget">
+            <attribute name="title">
+             <string>Locals</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="0" column="0">
+              <widget class="QTreeWidget" name="localsTreeWidget">
+               <property name="columnCount">
+                <number>4</number>
+               </property>
+               <column>
+                <property name="text">
+                 <string>Name</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Arg</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Value</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Used</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+            </layout>
+           </widget>
            <widget class="QWidget" name="loggerWidget">
             <attribute name="title">
              <string>Logger</string>
@@ -132,40 +166,6 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="LocalsWidget">
-            <attribute name="title">
-             <string>Locals</string>
-            </attribute>
-            <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="0">
-              <widget class="QTreeWidget" name="localsTreeWidget">
-               <property name="columnCount">
-                <number>4</number>
-               </property>
-               <column>
-                <property name="text">
-                 <string>Name</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Arg</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Value</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Used</string>
-                </property>
-               </column>
-              </widget>
-             </item>
-            </layout>
-           </widget>
           </widget>
          </widget>
         </item>
@@ -204,73 +204,6 @@
              <string>Breakpoints</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_4">
-             <item row="0" column="0">
-              <widget class="QTreeWidget" name="breakpointsTreeWidget">
-               <property name="columnCount">
-                <number>12</number>
-               </property>
-               <column>
-                <property name="text">
-                 <string>Number</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Type</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Disposition</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Enabled</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Address</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Function</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>File</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Fullname</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Line</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Thread Groups</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Times</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Original Location</string>
-                </property>
-               </column>
-              </widget>
-             </item>
              <item row="0" column="1">
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
@@ -343,6 +276,73 @@
                </item>
               </layout>
              </item>
+             <item row="0" column="0">
+              <widget class="QTreeWidget" name="breakpointsTreeWidget">
+               <property name="columnCount">
+                <number>12</number>
+               </property>
+               <column>
+                <property name="text">
+                 <string>Number</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Type</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Disposition</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Enabled</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Address</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Function</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>File</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Fullname</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Line</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Thread Groups</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Times</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Original Location</string>
+                </property>
+               </column>
+              </widget>
+             </item>
             </layout>
            </widget>
           </widget>
@@ -365,7 +365,7 @@
      <x>0</x>
      <y>0</y>
      <width>973</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

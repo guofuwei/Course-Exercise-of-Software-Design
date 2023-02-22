@@ -1,9 +1,10 @@
 ﻿#include "gdbprogress.h"
 
-GDbProgress::GDbProgress() {
+GDbProgress::GDbProgress()
+{
   this->setProgram("gdb.exe");
   this->setArguments(QStringList() << "-q"
-                                   << ".\\test.exe");
+                     << ".\\test.exe");
   this->start(QIODevice::ReadWrite);
   qDebug() << this->state();
   qDebug() << QDir::currentPath();
@@ -11,17 +12,19 @@ GDbProgress::GDbProgress() {
   GetMainFileName();
 }
 
-QByteArray GDbProgress::readoutput() {
+QByteArray GDbProgress::readoutput()
+{
   QByteArray bytes, output;
   do {
-    this->waitForReadyRead(1000);
+    this->waitForReadyRead(350);
     bytes = this->readAll();
     output += bytes;
   } while (!bytes.isEmpty());
   return output;
 }
 
-QByteArray GDbProgress::run(QString statement) {
+QByteArray GDbProgress::run(QString statement)
+{
   if (!statement.isEmpty() &&
       (statement.at(statement.length() - 1) != QChar('\n'))) {
     statement += "\n";
@@ -34,7 +37,8 @@ QByteArray GDbProgress::run(QString statement) {
   return QByteArray();
 }
 
-QByteArray GDbProgress::listcode() {
+QByteArray GDbProgress::listcode()
+{
   auto t = this->readAll();
   if (this->state() == QProcess::Running) {
     this->write("l 1,1000000\n");
@@ -46,7 +50,8 @@ QByteArray GDbProgress::listcode() {
   return QByteArray();
 }
 
-QByteArray GDbProgress::StartRun() {
+QByteArray GDbProgress::StartRun()
+{
   this->readAll();
   if (this->state() == QProcess::Running) {
     if (isrun == true) {
@@ -62,8 +67,10 @@ QByteArray GDbProgress::StartRun() {
   return QByteArray();
 }
 
-QMap<QString, QPair<QString, QString>> GDbProgress::GetLocalInfo() {
+QMap<QString, QPair<QString, QString>> GDbProgress::GetLocalInfo()
+{
   QMap<QString, QPair<QString, QString>> res;
+  QString statement;
   this->readAll();
   if (this->state() == QProcess::Running) {
     if (isrun == false) {
@@ -72,47 +79,53 @@ QMap<QString, QPair<QString, QString>> GDbProgress::GetLocalInfo() {
     this->write("info local\n");
     StringHandler::GetLocalValue(this->readoutput(), res);
     for (auto name : res.keys()) {
-      this->write(QString("whatis " + name + "\n").toLatin1());
-      auto str = this->readoutput();
-      str = str.mid(str.indexOf("=") + 1, str.indexOf("\n") - str.indexOf("="))
-                .simplified();
-      res[name].second = str;
+      statement += QString("whatis " + name + "\n").toLatin1();
+    }
+    QString str = this->run(statement);
+    for (auto name : res.keys()) {
+      auto t = str.mid(str.indexOf("=") + 1, str.indexOf("\n") - str.indexOf("="))
+               .simplified();
+      res[name].second = t;
+      str = str.mid(str.indexOf("\n") + 1);
     }
     return res;
   }
   return res;
 }
 
-QList<QMap<QString, QString>> GDbProgress::GetBreakPointInfo() {
+QList<QMap<QString, QString>> GDbProgress::GetBreakPointInfo()
+{
   auto str = this->run("info break\n");
   return StringHandler::ToBreakPointInfo(str);
 }
 
-QList<QString> GDbProgress::GetLocalPos() {
+QList<QString> GDbProgress::GetLocalPos()
+{
   QList<QString> res;
   QString str = this->run("where\n");
   res = StringHandler::FindLocalPos(str);
   return res;
 }
 
-QString GDbProgress::GetCurrentFileName() {
+QString GDbProgress::GetCurrentFileName()
+{
   auto output = this->run("info source\n");
   return StringHandler::ToCurrentFileName(output);
 }
 
-QString GDbProgress::GetMainFileName() {
-  // qDebug() << this->run("break 6\n");
-  qDebug() << this->run("tbreak 2\n");
-  // qDebug() << this->run("y\n");
-  qDebug() << this->run("run\n");
+
+QString GDbProgress::GetMainFileName()
+{
+  this->run("tbreak main\n");
+  this->run("run\n");
   m_filename = GetCurrentFileName();
+  m_filename = QFileInfo(m_filename).fileName();
   this->run("c\n");
   return m_filename;
 }
-
 QString GDbProgress::FileName() { return m_filename; }
-
-void GDbProgress::on_runprogram() {
+void GDbProgress::on_runprogram()
+{
   QByteArray output;
   if (isrun == false) {
     output = this->run("r\n");
@@ -126,6 +139,7 @@ void GDbProgress::on_runprogram() {
   if (str.indexOf("exited normally") != -1) {
     isrun = false;
     emit setpostion("", 0, 0);
+    emit update();
     return;
   }
   auto list = StringHandler::FindBreakPoint(str);
@@ -135,9 +149,10 @@ void GDbProgress::on_runprogram() {
   qDebug() << list;
   int line = list.at(4).toInt();
   emit setpostion(list.at(3), line, -1);
+  emit update();
 }
-
-void GDbProgress::on_next() {
+void GDbProgress::on_next()
+{
   if (isrun == false) {
     // 提示
     qDebug() << "no run";
@@ -149,6 +164,7 @@ void GDbProgress::on_next() {
   if (str.indexOf("exited normally") != -1) {
     isrun = false;
     emit setpostion("", 0, 0);
+    emit update();
     return;
   }
   auto list = this->GetLocalPos();
@@ -156,9 +172,10 @@ void GDbProgress::on_next() {
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
+  emit update();
 }
-
-void GDbProgress::on_step() {
+void GDbProgress::on_step()
+{
   if (isrun == false) {
     // 提示
     qDebug() << "no run";
@@ -168,6 +185,7 @@ void GDbProgress::on_step() {
   if (str.indexOf("exited normally") != -1) {
     isrun = false;
     emit setpostion("", 0, 0);
+    emit update();
     return;
   }
   auto list = this->GetLocalPos();
@@ -175,9 +193,10 @@ void GDbProgress::on_step() {
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
+  emit update();
 }
-
-void GDbProgress::on_finish() {
+void GDbProgress::on_finish()
+{
   if (isrun == false) {
     // 提示
     qDebug() << "no run";
@@ -193,14 +212,15 @@ void GDbProgress::on_finish() {
     return;
   }
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
+  emit update();
 }
-
-void GDbProgress::on_listcodeforcurrentfile(QString name, int line, int index) {
+void GDbProgress::on_listcodeforcurrentfile(QString name, int line, int index)
+{
   // emit setpostion(name,line,index);
   emit setcontent(this->listcode(), name, line, index);
 }
-
-void GDbProgress::on_addbreakpoint(QString filename, int line) {
+void GDbProgress::on_addbreakpoint(QString filename, int line)
+{
   QString statement("b ");
   statement += filename;
   statement += ":";
@@ -209,8 +229,8 @@ void GDbProgress::on_addbreakpoint(QString filename, int line) {
   auto res = this->run(statement);
   qDebug() << res;
 }
-
-void GDbProgress::on_removebreakpoint(QString filename, int line) {
+void GDbProgress::on_removebreakpoint(QString filename, int line)
+{
   QString statement("clear ");
   statement += filename;
   statement += ":";

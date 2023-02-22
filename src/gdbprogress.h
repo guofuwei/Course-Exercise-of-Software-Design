@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QPair>
 #include <QDir>
+#include <QDateTime>
 #include "stringhandler.h"
 
 class GDbProgress : public QProcess
@@ -41,6 +42,7 @@ private:
 signals:
   void setcontent(QString, QString, int, int);
   void setpostion(QString, int, int);
+  void update();
 };
 
 #endif // GDBPROGRESS_H

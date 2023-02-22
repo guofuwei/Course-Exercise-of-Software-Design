@@ -1,7 +1,7 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "texteditor.h"
-#include<QFileDialog>
+#include <QFileDialog>
 #include <QTreeWidgetItem>
 #include <utils.h>
 
@@ -32,8 +32,10 @@ void MainWindow::init()
           &GDbProgress::on_runprogram);
   connect(this, &MainWindow::next, this->m_progress, &GDbProgress::on_next);
   connect(this, &MainWindow::step, this->m_progress, &GDbProgress::on_step);
+  connect(this, &MainWindow::finish, this->m_progress, &GDbProgress::on_finish);
   connect(this->m_progress, &GDbProgress::setpostion, this->ui->GuiTextEditor,
           &TextEditor::on_setpostion);
+  connect(this->m_progress, &GDbProgress::update, this, &MainWindow::on_update);
   connect(this->m_progress, &GDbProgress::setcontent, this->ui->GuiTextEditor,
           &TextEditor::on_sendcontent);
   connect(this->ui->GuiTextEditor, &TextEditor::listcodeforcurrentfile,
@@ -42,6 +44,41 @@ void MainWindow::init()
   connect(this->ui->GuiTextEditor, &TextEditor::removebreakpoint, this->m_progress, &GDbProgress::on_removebreakpoint);
   //    connect(this,&MainWindow::runprogram,this->m_progress,&GDbProgress::on_runprogram);
   //    connect(this->m_progress,&GDbProgress::setpostion,this->ui->GuiTextEditor,&TextEditor::on_setpostion);
+}
+
+void MainWindow::BreakPointTreeWidgetUpdate()
+{
+  auto list = this->m_progress->GetBreakPointInfo();
+  ui->breakpointsTreeWidget->clear();
+  for (auto breakpoint : list) {
+    QString str;
+    QTreeWidgetItem *t = new QTreeWidgetItem();
+    t->setText(0, breakpoint["number"]);
+    t->setText(1, breakpoint["type"]);
+    t->setText(2, breakpoint["keep"]);
+    t->setText(3, breakpoint["enable"]);
+    t->setText(4, breakpoint["address"]);
+    auto begin = breakpoint["file"].indexOf("in ") + 3;
+    auto end = breakpoint["file"].indexOf("at");
+    str = breakpoint["file"].mid(begin, end - begin);
+    t->setText(5, str);
+    str = breakpoint["file"].mid(end + 2);
+    t->setText(6, str);
+    ui->breakpointsTreeWidget->addTopLevelItem(t);
+  }
+}
+
+void MainWindow::LocalsTreeWidgetUpdate()
+{
+  auto map = this->m_progress->GetLocalInfo();
+  ui->localsTreeWidget->clear();
+  for (auto iter = map.begin(); iter != map.end(); iter++) {
+    QTreeWidgetItem *t = new QTreeWidgetItem();
+    t->setText(0, iter.key());
+    t->setText(1, iter.value().second);
+    t->setText(2, iter.value().first);
+    ui->localsTreeWidget->addTopLevelItem(t);
+  }
 }
 
 void MainWindow::on_actionRun_triggered() { emit runprogram(); }
@@ -55,10 +92,10 @@ void MainWindow::on_actionOpen_Folder_triggered()
   QStringList sourceFilePatterns = QStringList({"*.cpp", "*.c", "*.cc"});
   QStringList headerFilePatterns = QStringList({"*.hpp", "*.h"});
   QString filename = QFileDialog::getExistingDirectory();
-//  qDebug() << filename << endl;
+  //  qDebug() << filename << endl;
   m_sourceFilename = filename;
   QDir *dir = new QDir(filename);
-//  qDebug() << Cesd::matches(sourceFilePatterns, "aaa.cpp");
+  //  qDebug() << Cesd::matches(sourceFilePatterns, "aaa.cpp");
   QStringList filter;
   QList<QFileInfo> *fileInfo = new QList<QFileInfo>(dir->entryInfoList(filter));
   // 下面进行ui的编写
@@ -83,12 +120,20 @@ void MainWindow::on_actionOpen_Folder_triggered()
   }
 }
 
-
-
 void MainWindow::on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
   QString fullFilename = m_sourceFilename + "/" + item->text(column);
   qDebug() << fullFilename << endl;
   ui->GuiTextEditor->readfromfile(fullFilename);
+}
+void MainWindow::on_actionFinish_triggered()
+{
+  emit finish();
+}
+
+void MainWindow::on_update()
+{
+  BreakPointTreeWidgetUpdate();
+  LocalsTreeWidgetUpdate();
 }
 
