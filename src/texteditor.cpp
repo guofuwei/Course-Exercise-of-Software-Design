@@ -172,7 +172,7 @@ void TextEditor::on_margin_clicked(int m, int n, Qt::KeyboardModifiers)
     //m_sci->markerAdd(n,2);
 
     }
-    qDebug()<<n<<"\t"<<m;
+    //qDebug()<<n<<"\t"<<m;
     m_sci->autoCompleteFromDocument();
     //qDebug()<<m_sci->lines();//行数
    //

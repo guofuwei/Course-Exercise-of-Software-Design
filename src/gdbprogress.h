@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QPair>
 #include <QDir>
+#include <QDateTime>
 #include "stringhandler.h"
 
 

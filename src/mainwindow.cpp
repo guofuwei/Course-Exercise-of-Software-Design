@@ -27,6 +27,7 @@ void MainWindow::init()
           &GDbProgress::on_runprogram);
   connect(this, &MainWindow::next, this->m_progress, &GDbProgress::on_next);
   connect(this, &MainWindow::step, this->m_progress, &GDbProgress::on_step);
+  connect(this, &MainWindow::finish, this->m_progress, &GDbProgress::on_finish);
   connect(this->m_progress, &GDbProgress::setpostion, this->ui->GuiTextEditor,
           &TextEditor::on_setpostion);
   connect(this->m_progress, &GDbProgress::setcontent, this->ui->GuiTextEditor,
@@ -44,3 +45,9 @@ void MainWindow::on_actionRun_triggered() { emit runprogram(); }
 void MainWindow::on_actionNext_triggered() { emit next(); }
 
 void MainWindow::on_actionStep_triggered() { emit step(); }
+
+void MainWindow::on_actionFinish_triggered()
+{
+    emit finish();
+}
+

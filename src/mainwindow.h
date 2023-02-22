@@ -25,13 +25,15 @@ public:
 private slots:
   void on_actionRun_triggered();
   void on_actionNext_triggered();
-
   void on_actionStep_triggered();
+
+  void on_actionFinish_triggered();
 
 signals:
   void runprogram();
   void next();
   void step();
+  void finish();
 
 private:
   Ui::MainWindow *ui;

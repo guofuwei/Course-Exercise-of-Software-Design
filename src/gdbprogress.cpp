@@ -16,7 +16,7 @@ QByteArray GDbProgress::readoutput()
 {
   QByteArray bytes, output;
   do {
-    this->waitForReadyRead(1000);
+    this->waitForReadyRead(500);
     bytes = this->readAll();
     output += bytes;
   } while (!bytes.isEmpty());
