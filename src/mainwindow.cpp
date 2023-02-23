@@ -97,5 +97,7 @@ void MainWindow::on_update()
 {
     BreakPointTreeWidgetUpdate();
     LocalsTreeWidgetUpdate();
+    qDebug()<<m_progress->state();
+
 }
 

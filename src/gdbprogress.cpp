@@ -4,7 +4,7 @@ GDbProgress::GDbProgress()
 {
   this->setProgram("gdb.exe");
   this->setArguments(QStringList() << "-q"
-                     << ".\\t2.exe");
+                     << ".\\t.exe");
   this->start(QIODevice::ReadWrite);
   qDebug() << this->state();
   qDebug() << QDir::currentPath();
@@ -121,11 +121,11 @@ QString GDbProgress::GetCurrentFileName()
 QString GDbProgress::GetMainFileName()
 {
   //qDebug() << this->run("break 6\n");
-   this->run("tbreak 2\n");
-  // qDebug() << this->run("y\n");
+   this->run("tbreak main\n");
   this->run("run\n");
+   // qDebug()<<this->run("starti\n");
   m_filename = GetCurrentFileName();
-  this->run("c\n");
+  auto watch=this->run("kill\n");
   return m_filename;
 }
 

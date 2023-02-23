@@ -18,8 +18,8 @@ public:
   QByteArray listcode();
   QByteArray StartRun();
 
-  QByteArray RunNext();
-  QByteArray RunStep();
+ // QByteArray RunNext();
+ // QByteArray RunStep();
 
   QMap<QString, QPair<QString, QString>> GetLocalInfo();
   QList<QMap<QString, QString> > GetBreakPointInfo();
