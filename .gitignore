@@ -57,3 +57,7 @@ compile_commands.json
 .qm
 debug
 release
+*.exe
+.qmake.stash
+.vscode
+.cache

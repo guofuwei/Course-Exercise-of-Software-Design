@@ -15,14 +15,16 @@ SOURCES += \
     gdbprogress.cpp \
     logdialog.cpp \
     stringhandler.cpp \
-    texteditor.cpp
+    texteditor.cpp \
+    utils.cpp
 
 HEADERS += \
     mainwindow.h \
     gdbprogress.h \
     mainwindow.h \
     stringhandler.h \
-    texteditor.h
+    texteditor.h \
+    utils.h
 
 FORMS += \
     mainwindow.ui

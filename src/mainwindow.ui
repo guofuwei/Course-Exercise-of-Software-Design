@@ -372,6 +372,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionOpen_Folder"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -478,6 +479,11 @@
    </property>
    <property name="text">
     <string>Finish</string>
+   </property>
+  </action>
+  <action name="actionOpen_Folder">
+   <property name="text">
+    <string>Open Folder</string>
    </property>
   </action>
  </widget>

@@ -4,7 +4,7 @@ GDbProgress::GDbProgress()
 {
   this->setProgram("gdb.exe");
   this->setArguments(QStringList() << "-q"
-                     << ".\\t.exe");
+                     << ".\\test.exe");
   this->start(QIODevice::ReadWrite);
   qDebug() << this->state();
   qDebug() << QDir::currentPath();
@@ -78,23 +78,18 @@ QMap<QString, QPair<QString, QString>> GDbProgress::GetLocalInfo()
     }
     this->write("info local\n");
     StringHandler::GetLocalValue(this->readoutput(), res);
-
     for (auto name : res.keys()) {
-        statement+=QString("whatis " + name + "\n").toLatin1();
+      statement += QString("whatis " + name + "\n").toLatin1();
     }
-    QString str =this->run(statement);
-
-    for(auto name : res.keys())
-    {
-        auto t= str.mid(str.indexOf("=") + 1, str.indexOf("\n") - str.indexOf("="))
-                   .simplified();
-        res[name].second = t;
-        str=str.mid(str.indexOf("\n")+1);
+    QString str = this->run(statement);
+    for (auto name : res.keys()) {
+      auto t = str.mid(str.indexOf("=") + 1, str.indexOf("\n") - str.indexOf("="))
+               .simplified();
+      res[name].second = t;
+      str = str.mid(str.indexOf("\n") + 1);
     }
-
     return res;
   }
-
   return res;
 }
 
@@ -118,19 +113,19 @@ QString GDbProgress::GetCurrentFileName()
   return StringHandler::ToCurrentFileName(output);
 }
 
+
 QString GDbProgress::GetMainFileName()
 {
-  //qDebug() << this->run("break 6\n");
-   this->run("tbreak main\n");
+  this->run("tbreak main\n");
   this->run("run\n");
    // qDebug()<<this->run("starti\n");
   m_filename = GetCurrentFileName();
+  m_filename = QFileInfo(m_filename).fileName();
   auto watch=this->run("kill\n");
+  
   return m_filename;
 }
-
 QString GDbProgress::FileName() { return m_filename; }
-
 void GDbProgress::on_runprogram()
 {
   QByteArray output;
@@ -158,7 +153,6 @@ void GDbProgress::on_runprogram()
   emit setpostion(list.at(3), line, -1);
   emit update();
 }
-
 void GDbProgress::on_next()
 {
   if (isrun == false) {
@@ -182,7 +176,6 @@ void GDbProgress::on_next()
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
   emit update();
 }
-
 void GDbProgress::on_step()
 {
   if (isrun == false) {
@@ -204,7 +197,6 @@ void GDbProgress::on_step()
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
   emit update();
 }
-
 void GDbProgress::on_finish()
 {
   if (isrun == false) {
@@ -224,13 +216,11 @@ void GDbProgress::on_finish()
   emit setpostion(list.at(0), list.at(1).toInt(), -1);
   emit update();
 }
-
 void GDbProgress::on_listcodeforcurrentfile(QString name, int line, int index)
 {
   // emit setpostion(name,line,index);
   emit setcontent(this->listcode(), name, line, index);
 }
-
 void GDbProgress::on_addbreakpoint(QString filename, int line)
 {
   QString statement("b ");
@@ -241,7 +231,6 @@ void GDbProgress::on_addbreakpoint(QString filename, int line)
   auto res = this->run(statement);
   qDebug() << res;
 }
-
 void GDbProgress::on_removebreakpoint(QString filename, int line)
 {
   QString statement("clear ");

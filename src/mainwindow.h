@@ -8,14 +8,16 @@
 // #include "texteditor.h"
 #include "gdbprogress.h"
 #include "stringhandler.h"
+#include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+  class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
   Q_OBJECT
 
 public:
@@ -32,6 +34,10 @@ private slots:
   void on_actionFinish_triggered();
   void on_update();
 
+  void on_actionOpen_Folder_triggered();
+
+  void on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column);
+
 signals:
   void runprogram();
   void next();
@@ -41,5 +47,7 @@ signals:
 private:
   Ui::MainWindow *ui;
   GDbProgress *m_progress;
+  QString m_sourceFilename;
+
 };
 #endif // MAINWINDOW_H
