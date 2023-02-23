@@ -30,6 +30,8 @@ void MainWindow::init()
   //  测试
   connect(this, &MainWindow::runprogram, this->m_progress,
           &GDbProgress::on_runprogram);
+  connect(this, &MainWindow::continueprogram, this->m_progress,
+          &GDbProgress::on_continueprogram);
   connect(this, &MainWindow::next, this->m_progress, &GDbProgress::on_next);
   connect(this, &MainWindow::step, this->m_progress, &GDbProgress::on_step);
   connect(this, &MainWindow::finish, this->m_progress, &GDbProgress::on_finish);
@@ -139,3 +141,8 @@ void MainWindow::on_update()
 
 }
 
+
+void MainWindow::on_actionContinue_triggered()
+{
+    emit continueprogram();
+}

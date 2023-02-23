@@ -29,6 +29,7 @@ public:
   QString FileName();
 public slots:
   void on_runprogram();
+  void on_continueprogram();
   void on_next();
   void on_step();
   void on_finish();

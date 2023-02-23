@@ -38,11 +38,14 @@ private slots:
 
   void on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
+  void on_actionContinue_triggered();
+
 signals:
   void runprogram();
   void next();
   void step();
   void finish();
+  void continueprogram();
 
 private:
   Ui::MainWindow *ui;

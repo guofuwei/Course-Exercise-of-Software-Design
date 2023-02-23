@@ -4,7 +4,7 @@ GDbProgress::GDbProgress()
 {
   this->setProgram("gdb.exe");
   this->setArguments(QStringList() << "-q"
-                     << ".\\test.exe");
+                     << ".\\t2.exe");
   this->start(QIODevice::ReadWrite);
   qDebug() << this->state();
   qDebug() << QDir::currentPath();
@@ -16,7 +16,7 @@ QByteArray GDbProgress::readoutput()
 {
   QByteArray bytes, output;
   do {
-    this->waitForReadyRead(350);
+    this->waitForReadyRead(300);
     bytes = this->readAll();
     output += bytes;
   } while (!bytes.isEmpty());
@@ -133,7 +133,8 @@ void GDbProgress::on_runprogram()
     output = this->run("r\n");
     isrun = true;
   } else {
-    output = this->run("c\n");
+    //output = this->run("c\n");
+      return ;
   }
   auto str = QString(output);
   // qDebug().noquote()<<str;
@@ -152,6 +153,36 @@ void GDbProgress::on_runprogram()
   int line = list.at(4).toInt();
   emit setpostion(list.at(3), line, -1);
   emit update();
+}
+
+void GDbProgress::on_continueprogram()
+{
+    QByteArray output;
+    if (isrun == true) {
+      output = this->run("c\n");
+     // isrun = true;
+    } else {
+        return ;
+      //output = this->run("c\n");
+    }
+    auto str = QString(output);
+    // qDebug().noquote()<<str;
+    // if(str.indexOf())
+    if (str.indexOf("exited normally") != -1) {
+      isrun = false;
+      emit setpostion("", 0, 0);
+      emit update();
+      return;
+    }
+    auto list = StringHandler::FindBreakPoint(str);
+    if (list.isEmpty()) {
+      return;
+    }
+    qDebug() << list;
+    int line = list.at(4).toInt();
+    emit setpostion(list.at(3), line, -1);
+    emit update();
+
 }
 void GDbProgress::on_next()
 {
