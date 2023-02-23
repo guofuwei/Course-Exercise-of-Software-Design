@@ -14,6 +14,7 @@ SOURCES += \
     mainwindow.cpp \
     gdbprogress.cpp \
     logdialog.cpp \
+    mypaint.cpp \
     stringhandler.cpp \
     texteditor.cpp \
     utils.cpp
@@ -22,6 +23,7 @@ HEADERS += \
     mainwindow.h \
     gdbprogress.h \
     mainwindow.h \
+    mypaint.h \
     stringhandler.h \
     texteditor.h \
     utils.h

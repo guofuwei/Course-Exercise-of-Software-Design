@@ -17,7 +17,7 @@ MainWindow::~MainWindow() { delete ui; }
 void MainWindow::init()
 {
   ui->splittermain->setSizes(QList<int>()
-                             << this->width() * 1 / 3 << this->width() * 2 / 3);
+                             << this->width() * 1 / 4 << this->width() * 1 / 2 << this->width() * 1 / 4);
   ui->splittermiddle->setSizes(QList<int>() << this->height() * 2 / 3
                                << this->height() * 1 / 3);
   this->m_progress = new GDbProgress();
@@ -133,9 +133,8 @@ void MainWindow::on_actionFinish_triggered()
 
 void MainWindow::on_update()
 {
-    BreakPointTreeWidgetUpdate();
-    LocalsTreeWidgetUpdate();
-    qDebug()<<m_progress->state();
-
+  BreakPointTreeWidgetUpdate();
+  LocalsTreeWidgetUpdate();
+  qDebug() << m_progress->state();
 }
 

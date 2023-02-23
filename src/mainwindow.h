@@ -7,7 +7,7 @@
 
 // #include "texteditor.h"
 #include "gdbprogress.h"
-#include "stringhandler.h"
+//#include "stringhandler.h"
 #include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
