@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,6 +10,7 @@ CONFIG += qscintilla2
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    audiorecord.cpp \
     main.cpp \
     mainwindow.cpp \
     gdbprogress.cpp \
@@ -17,15 +18,18 @@ SOURCES += \
     mypaint.cpp \
     stringhandler.cpp \
     texteditor.cpp \
+    timerwidget.cpp \
     utils.cpp
 
 HEADERS += \
+    audiorecord.h \
     mainwindow.h \
     gdbprogress.h \
     mainwindow.h \
     mypaint.h \
     stringhandler.h \
     texteditor.h \
+    timerwidget.h \
     utils.h
 
 FORMS += \

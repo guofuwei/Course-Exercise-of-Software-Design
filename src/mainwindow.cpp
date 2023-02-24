@@ -1,33 +1,37 @@
 ﻿#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "texteditor.h"
-#include <QFileDialog>
-#include <QTreeWidgetItem>
+
 #include <utils.h>
 
+#include <QFileDialog>
+#include <QTreeWidgetItem>
+
+#include "texteditor.h"
+#include "ui_mainwindow.h"
+
 MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent), ui(new Ui::MainWindow)
-{
+    : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
   this->init();
 }
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::init()
-{
+void MainWindow::init() {
+  // 调整ui样式
   ui->splittermain->setSizes(QList<int>()
-                             << this->width() * 1 / 4 << this->width() * 1 / 2 << this->width() * 1 / 4);
+                             << this->width() * 1 / 4 << this->width() * 1 / 2
+                             << this->width() * 1 / 4);
   ui->splittermiddle->setSizes(QList<int>() << this->height() * 2 / 3
-                               << this->height() * 1 / 3);
+                                            << this->height() * 1 / 3);
   this->m_progress = new GDbProgress();
-  // 测试
   ui->GuiTextEditor->newpage(m_progress->FileName());
   ui->GuiTextEditor->setcontent(m_progress->listcode());
   ui->sourceTreeWidget->clear();
-  // m_progress->run("b main");
-  //  m_progress->run("b add");
-  //  测试
+  ui->RecordTimerWidget->setStyleSheet(QString("QLabel{font-size:48px;}"));
+  ui->RecordTimerWidget->reset();
+  ui->RecordTimerWidget->showTime();
+  m_audio_record = new AudioRecord(ui->plainTextEditAudioLog);
+  //  连接信号函数
   connect(this, &MainWindow::runprogram, this->m_progress,
           &GDbProgress::on_runprogram);
   connect(this, &MainWindow::next, this->m_progress, &GDbProgress::on_next);
@@ -40,14 +44,15 @@ void MainWindow::init()
           &TextEditor::on_sendcontent);
   connect(this->ui->GuiTextEditor, &TextEditor::listcodeforcurrentfile,
           this->m_progress, &GDbProgress::on_listcodeforcurrentfile);
-  connect(this->ui->GuiTextEditor, &TextEditor::addbreakpoint, this->m_progress, &GDbProgress::on_addbreakpoint);
-  connect(this->ui->GuiTextEditor, &TextEditor::removebreakpoint, this->m_progress, &GDbProgress::on_removebreakpoint);
+  connect(this->ui->GuiTextEditor, &TextEditor::addbreakpoint, this->m_progress,
+          &GDbProgress::on_addbreakpoint);
+  connect(this->ui->GuiTextEditor, &TextEditor::removebreakpoint,
+          this->m_progress, &GDbProgress::on_removebreakpoint);
   //    connect(this,&MainWindow::runprogram,this->m_progress,&GDbProgress::on_runprogram);
   //    connect(this->m_progress,&GDbProgress::setpostion,this->ui->GuiTextEditor,&TextEditor::on_setpostion);
 }
 
-void MainWindow::BreakPointTreeWidgetUpdate()
-{
+void MainWindow::BreakPointTreeWidgetUpdate() {
   auto list = this->m_progress->GetBreakPointInfo();
   ui->breakpointsTreeWidget->clear();
   for (auto breakpoint : list) {
@@ -68,8 +73,7 @@ void MainWindow::BreakPointTreeWidgetUpdate()
   }
 }
 
-void MainWindow::LocalsTreeWidgetUpdate()
-{
+void MainWindow::LocalsTreeWidgetUpdate() {
   auto map = this->m_progress->GetLocalInfo();
   ui->localsTreeWidget->clear();
   for (auto iter = map.begin(); iter != map.end(); iter++) {
@@ -87,8 +91,7 @@ void MainWindow::on_actionNext_triggered() { emit next(); }
 
 void MainWindow::on_actionStep_triggered() { emit step(); }
 
-void MainWindow::on_actionOpen_Folder_triggered()
-{
+void MainWindow::on_actionOpen_Folder_triggered() {
   QStringList sourceFilePatterns = QStringList({"*.cpp", "*.c", "*.cc"});
   QStringList headerFilePatterns = QStringList({"*.hpp", "*.h"});
   QString filename = QFileDialog::getExistingDirectory();
@@ -107,34 +110,50 @@ void MainWindow::on_actionOpen_Folder_triggered()
   topHeaderItem->setText(0, "HeaderFiles");
   ui->sourceTreeWidget->addTopLevelItem(topHeaderItem);
   for (int i = 0; i < fileInfo->count(); i++) {
-    if (fileInfo->at(i).fileName() == "." || fileInfo->at(i).fileName() == "..") {
+    if (fileInfo->at(i).fileName() == "." ||
+        fileInfo->at(i).fileName() == "..") {
       continue;
     }
     QTreeWidgetItem *item = new QTreeWidgetItem();
     item->setText(1, fileInfo->at(i).fileName());
-    if (Cesd::matches(sourceFilePatterns, fileInfo->at(i).fileName(), QRegExp::Wildcard)) {
+    if (Cesd::matches(sourceFilePatterns, fileInfo->at(i).fileName(),
+                      QRegExp::Wildcard)) {
       topSourceItem->addChild(item);
-    } else if (Cesd::matches(headerFilePatterns, fileInfo->at(i).fileName(), QRegExp::Wildcard)) {
+    } else if (Cesd::matches(headerFilePatterns, fileInfo->at(i).fileName(),
+                             QRegExp::Wildcard)) {
       topHeaderItem->addChild(item);
     }
   }
 }
 
-void MainWindow::on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
-{
+void MainWindow::on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item,
+                                                       int column) {
   QString fullFilename = m_sourceFilename + "/" + item->text(column);
-  qDebug() << fullFilename << endl;
+  qDebug() << "fullFilename::" << fullFilename << endl;
   ui->GuiTextEditor->readfromfile(fullFilename);
 }
-void MainWindow::on_actionFinish_triggered()
-{
-  emit finish();
-}
+void MainWindow::on_actionFinish_triggered() { emit finish(); }
 
-void MainWindow::on_update()
-{
+void MainWindow::on_update() {
   BreakPointTreeWidgetUpdate();
   LocalsTreeWidgetUpdate();
   qDebug() << m_progress->state();
 }
 
+void MainWindow::on_pushButtonSavePic_clicked() { ui->PaintWidget->SavePic(); }
+
+void MainWindow::on_pushButtonClearAll_clicked() {
+  ui->PaintWidget->ClearAll();
+}
+void MainWindow::on_pushButtonStartRecord_clicked() {
+  if (ui->RecordTimerWidget->IsRun()) {
+    return;
+  }
+  m_audio_record->StartRecording();
+  ui->RecordTimerWidget->reset();
+  ui->RecordTimerWidget->start();
+}
+
+void MainWindow::on_pushButtonStopRecord_clicked() {
+  ui->RecordTimerWidget->reset();
+}
