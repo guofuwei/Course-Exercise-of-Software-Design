@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,22 +11,28 @@ CONFIG += qscintilla2
 
 SOURCES += \
     compilerprocess.cpp \
+    audiorecord.cpp \
     main.cpp \
     mainwindow.cpp \
     gdbprogress.cpp \
     logdialog.cpp \
+    mypaint.cpp \
     stringhandler.cpp \
     texteditor.cpp \
+    timerwidget.cpp \
     utils.cpp
 
 HEADERS += \
     compilerprocess.h \
     logdialog.h \
+    audiorecord.h \
     mainwindow.h \
     gdbprogress.h \
     mainwindow.h \
+    mypaint.h \
     stringhandler.h \
     texteditor.h \
+    timerwidget.h \
     utils.h
 
 FORMS += \
