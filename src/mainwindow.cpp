@@ -20,10 +20,21 @@ void MainWindow::init()
                              << this->width() * 1 / 3 << this->width() * 2 / 3);
   ui->splittermiddle->setSizes(QList<int>() << this->height() * 2 / 3
                                << this->height() * 1 / 3);
+  this->DisableAll();
   this->m_progress = new GDbProgress();
+  connect(this,&MainWindow::setlog,this->ui->LogWidget,&LogDialog::on_setcontent);
+
+  //this->CompileCurrentPage();
+
+
+//  this->CompileCode("./test.cpp");
+//  this->m_progress->ChangeProgram("./te.exe");
+
+
+
   // 测试
-  ui->GuiTextEditor->newpage(m_progress->FileName());
-  ui->GuiTextEditor->setcontent(m_progress->listcode());
+//  ui->GuiTextEditor->newpage(m_progress->FilePath());
+//  ui->GuiTextEditor->setcontent(m_progress->listcode());
   ui->sourceTreeWidget->clear();
   // m_progress->run("b main");
   //  m_progress->run("b add");
@@ -40,12 +51,79 @@ void MainWindow::init()
   connect(this->m_progress, &GDbProgress::update, this, &MainWindow::on_update);
   connect(this->m_progress, &GDbProgress::setcontent, this->ui->GuiTextEditor,
           &TextEditor::on_sendcontent);
+//  connect(this->ui->GuiTextEditor, &TextEditor::listcodeforcurrentfile,
+//          this->m_progress, &GDbProgress::on_listcodeforcurrentfile);
   connect(this->ui->GuiTextEditor, &TextEditor::listcodeforcurrentfile,
-          this->m_progress, &GDbProgress::on_listcodeforcurrentfile);
+          this, &MainWindow::on_listfile);
   connect(this->ui->GuiTextEditor, &TextEditor::addbreakpoint, this->m_progress, &GDbProgress::on_addbreakpoint);
   connect(this->ui->GuiTextEditor, &TextEditor::removebreakpoint, this->m_progress, &GDbProgress::on_removebreakpoint);
-  //    connect(this,&MainWindow::runprogram,this->m_progress,&GDbProgress::on_runprogram);
-  //    connect(this->m_progress,&GDbProgress::setpostion,this->ui->GuiTextEditor,&TextEditor::on_setpostion);
+  connect(this->m_progress,&GDbProgress::setlog,this->ui->LogWidget,&LogDialog::on_setcontent);
+  connect(this->m_progress,&GDbProgress::programload,this,&MainWindow::on_programload);
+  connect(this->ui->GuiTextEditor,&TextEditor::sourcefilechange,this,&MainWindow::on_tablechange);
+  connect(this->m_progress,&GDbProgress::updatebreakpoint,this,&MainWindow::BreakPointTreeWidgetUpdate);
+
+   //connect(this->ui->GuiTextEditor, &TextEditor::currentChanged, this,&MainWindow::on_table_change);
+
+}
+
+void MainWindow::DisableAll()
+{
+    this->ui->toolBar->hide();
+//    this->ui->actionRun->setEnabled(0);
+//    this->ui->actionContinue->setEnabled(0);
+//    this->ui->actionNext->setEnabled(0);
+//    this->ui->actionStep->setEnabled(0);
+//    this->ui->actionFinish->setEnabled(0);
+
+}
+
+void MainWindow::EnableAll()
+{
+    this->ui->toolBar->show();
+}
+
+void MainWindow::CompileCode(QString filepath, QStringList extra)
+{
+    CompilerProcess* t=new CompilerProcess(filepath);
+    connect(t,&CompilerProcess::setlog,this->ui->LogWidget,&LogDialog::on_setcontent);
+    if(!t->check())
+    {
+        return;
+    }
+    auto index=this->ui->GuiTextEditor->currentIndex();
+    auto data=this->ui->GuiTextEditor->GetContent(index);
+    auto sourcefile=QFile(m_sourceFilename);
+    if(!sourcefile.open(QIODevice::ReadWrite))
+    {
+        emit setlog(QString("[main] 无法打开")+m_sourceFilename);
+        return;
+    }
+    sourcefile.write(data);
+    t->compile();
+    //https://www.coder.work/article/6491894
+    //disconnect(t,&CompilerProcess::setlog,this->ui->LogWidget,&LogDialog::on_setcontent);
+    auto filename=QFileInfo(m_sourceFilename).baseName();
+    this->m_progress->ChangeProgram(QString("./temp/")+filename+".exe");
+    t->deleteLater();
+}
+
+void MainWindow::CompileCurrentPage()
+{
+    auto index=this->ui->GuiTextEditor->currentIndex();
+    if(index==-1)
+    {
+        emit setlog("[main] CompileCurrentPage 无打开页面");
+        return;
+    }
+    auto filename=this->ui->GuiTextEditor->tabText(index);
+    if(QFileInfo(filename).suffix()!="cpp"|QFileInfo(filename).suffix()!="c")
+    {
+        emit setlog("[main] CompileCurrentPage 文件不为cpp或c");
+        return;
+    }
+
+    //this->ui->GuiTextEditor->m_scilist.at()
+
 }
 
 void MainWindow::BreakPointTreeWidgetUpdate()
@@ -95,7 +173,7 @@ void MainWindow::on_actionOpen_Folder_triggered()
   QStringList headerFilePatterns = QStringList({"*.hpp", "*.h"});
   QString filename = QFileDialog::getExistingDirectory();
   //  qDebug() << filename << endl;
-  m_sourceFilename = filename;
+  m_workdir = filename;
   QDir *dir = new QDir(filename);
   //  qDebug() << Cesd::matches(sourceFilePatterns, "aaa.cpp");
   QStringList filter;
@@ -124,13 +202,39 @@ void MainWindow::on_actionOpen_Folder_triggered()
 
 void MainWindow::on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
-  QString fullFilename = m_sourceFilename + "/" + item->text(column);
+  QString fullFilename = m_workdir + "/" + item->text(1);
+  //QString fullFilename = m_workdir + "/" + item->text(column);
   qDebug() << fullFilename << endl;
   ui->GuiTextEditor->readfromfile(fullFilename);
 }
 void MainWindow::on_actionFinish_triggered()
 {
-  emit finish();
+    emit finish();
+}
+
+
+
+void MainWindow::on_listfile(QString name, int line, int index)
+{
+    auto content=this->m_progress->listcode();
+    auto i = this->ui->GuiTextEditor->currentIndex();
+    this->ui->GuiTextEditor->setcontent(content,i);
+    this->ui->GuiTextEditor->on_setpostion(name, line, index);
+}
+
+void MainWindow::on_tablechange(QString filepath)
+{
+    m_sourceFilename=filepath;
+    qDebug()<<m_sourceFilename;
+}
+
+void MainWindow::on_programload()
+{
+   this->EnableAll();
+   this->ui->breakpointsTreeWidget->clear();
+   this->ui->localsTreeWidget->clear();
+   this->ui->statusbar->showMessage(m_sourceFilename);
+    this->ui->GuiTextEditor->removeallbreakpoint();
 }
 
 void MainWindow::on_update()
@@ -145,4 +249,10 @@ void MainWindow::on_update()
 void MainWindow::on_actionContinue_triggered()
 {
     emit continueprogram();
+}
+
+void MainWindow::on_actioncompile_triggered()
+{
+    this->CompileCode(m_sourceFilename);
+
 }

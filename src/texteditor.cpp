@@ -8,6 +8,8 @@ TextEditor::TextEditor(QWidget *parent) : QTabWidget(parent)
   this->m_imagerihtarrow = QImage("://resources/icons-icons/arrow-right.png").scaled(QSize(16, 16));
   this->setTabsClosable(1);
   connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(on_table_close(int)));
+  connect(this, SIGNAL(currentChanged(int)), this, SLOT(on_table_change(int)));
+
 }
 
 void TextEditor::initsci()
@@ -45,7 +47,7 @@ void TextEditor::initsci()
   //            SLOT(on_margin_clicked(int, int, Qt::KeyboardModifiers)));
   //    //m_sci->setMarkerForegroundColor(QColor(Qt::red));
   sciScintilla->setLexer(textLexer); // 给QsciScintilla设置词法分析器
-  sciScintilla->setReadOnly(1);
+  sciScintilla->setReadOnly(0);
   sciScintilla->markerDefine(m_imagerihtarrow, 2);
   sciScintilla->markerDefine(QsciScintilla::Circle, 1);
   sciScintilla->setWrapIndentMode(QsciScintilla::WrapIndentSame);
@@ -76,9 +78,17 @@ void TextEditor::initsci()
   m_scilist.append(sciScintilla);
 }
 
-void TextEditor::newpage(QString name)
+void TextEditor::newpage(QString path)
 {
+    auto name=QFileInfo(path).fileName();
+    for(int i = 0; i < this->count(); i++) {
+      if (this->tabText(i) == name) {
+        this->setCurrentIndex(i);
+        return;
+      }
+    }
   initsci();
+  this->m_filepathlist.append(path);
   this->addTab(m_scilist.last(), name);
 }
 
@@ -86,12 +96,12 @@ void TextEditor::readfromfile(QString filepath)
 {
   QFile file(filepath);
   auto filename = QFileInfo(file).fileName();
-  qDebug() << filename;
+  //qDebug() << filename;
   if (!file.open(QIODevice::ReadOnly)) {
     QMessageBox::warning(0, "warning", "can not open");
     return;
   }
-  this->newpage(filename);
+  this->newpage(filepath);
   this->m_scilist.last()->setText(file.readAll());
   file.close();
 }
@@ -123,6 +133,24 @@ bool TextEditor::changepage(QString name)
   return false;
 }
 
+void TextEditor::removeallbreakpoint()
+{
+    auto i = currentIndex();
+    if(i==-1)
+        return;
+    this->m_scilist.at(i)->markerDeleteAll(1);
+}
+
+QByteArray TextEditor::GetContent(int index)
+{
+    if (index == -1) {
+      index = currentIndex();
+    }
+    if(index==-1)
+        return QByteArray();
+    return m_scilist.at(index)->text().toLatin1();
+}
+
 void TextEditor::on_margin_clicked(int m, int n, Qt::KeyboardModifiers)
 {
   auto index = this->currentIndex();
@@ -148,11 +176,26 @@ void TextEditor::on_table_close(int index)
 {
   this->m_scilist.at(index)->close();
   this->m_scilist.removeAt(index);
+  this->m_filepathlist.removeAt(index);
   this->removeTab(index);
 }
 
+void TextEditor::on_table_change(int index)
+{
+    if(this->count()==0)
+        return;
+    auto i=this->currentIndex();
+   auto source_filename=this->tabText(i);
+   auto source_filepath=this->m_filepathlist.at(i);
+   emit sourcefilechange(source_filepath);
+}
+
+
+
 void TextEditor::on_setpostion(QString name, int line, int index)
 {
+  if(this->count()==0)
+        return;
   auto i = this->currentIndex();
   this->m_scilist.at(i)->markerDeleteAll(2);
   if (name.isEmpty()) {

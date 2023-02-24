@@ -8,12 +8,15 @@
 class LogDialog:public QTabWidget
 {
 public:
-    LogDialog();
+    LogDialog(QWidget *parent=nullptr);
     void setlogcontent(QByteArray content);
     QString  LogText();
 
 private:
     QTextEdit* m_logtextedit;
+public slots:
+    void on_setcontent(QString);
+
 };
 
 #endif // LOGDIALOG_H

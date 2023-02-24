@@ -73,8 +73,9 @@ QList<QMap<QString, QString> > StringHandler::ToBreakPointInfo(QString  str)
 {
     QList<QMap<QString, QString> > res;
     //QRegularExpression exp1("(\d)\s+([a-z]+)\s+([a-z]+)\s+([a-z]+)\s+([a-z\d]+)\s+([a-z\s().:\d]+)");
-    QRegularExpression exp1("(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z\\d]+)\\s+([a-z\\s().:\\d]+?)\n|"
-                            "(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z\\d]+)\\s+([a-z\\s().:\\d]+)$");
+//    QRegularExpression exp1("(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z\\d]+)\\s+([a-z\\s().:\\d]+?)\n|"
+//                            "(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z\\d]+)\\s+([a-z\\s().:\\d]+)$");
+    QRegularExpression exp1("(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+(0x[a-z\\d]+)\\s+([a-z\\s/()A-Z:]+?..*\\d)");
 
     auto i=exp1.globalMatch(str);
     while(i.hasNext())
@@ -86,7 +87,7 @@ QList<QMap<QString, QString> > StringHandler::ToBreakPointInfo(QString  str)
         map["keep"]=t.captured(3);
         map["enable"]=t.captured(4);
         map["address"]=t.captured(5);
-        map["file"]=t.captured(6);
+        map["file"]=t.captured(6).remove("\r\n").simplified();
         res.append(map);
     }
     //qDebug()<<res;
@@ -96,8 +97,8 @@ QList<QMap<QString, QString> > StringHandler::ToBreakPointInfo(QString  str)
 
 QString StringHandler::ToCurrentFileName(QString str)
 {
-    auto begin=str.indexOf("is")+2;
-    auto end=str.indexOf("Compilation");
+    auto begin=str.indexOf("Located in")+10;
+    auto end=str.indexOf("Contains");
     //qDebug()<<str.mid(begin,end-begin).simplified();
     return str.mid(begin,end-begin).simplified();
 }
