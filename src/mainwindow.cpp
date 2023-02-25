@@ -171,7 +171,7 @@ void MainWindow::on_actionOpen_Folder_triggered()
 {
   QStringList sourceFilePatterns = QStringList({"*.cpp", "*.c", "*.cc"});
   QStringList headerFilePatterns = QStringList({"*.hpp", "*.h"});
-  QString filename = QFileDialog::getExistingDirectory();
+  QString filename = QFileDialog::getExistingDirectory(this,"open ","F:\\tool\\minGw\\code");
   //  qDebug() << filename << endl;
   m_workdir = filename;
   QDir *dir = new QDir(filename);

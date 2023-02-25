@@ -75,7 +75,7 @@ QList<QMap<QString, QString> > StringHandler::ToBreakPointInfo(QString  str)
     //QRegularExpression exp1("(\d)\s+([a-z]+)\s+([a-z]+)\s+([a-z]+)\s+([a-z\d]+)\s+([a-z\s().:\d]+)");
 //    QRegularExpression exp1("(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z\\d]+)\\s+([a-z\\s().:\\d]+?)\n|"
 //                            "(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z\\d]+)\\s+([a-z\\s().:\\d]+)$");
-    QRegularExpression exp1("(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+(0x[a-z\\d]+)\\s+([a-z\\s/()A-Z:]+?..*\\d)");
+    QRegularExpression exp1("(\\d)\\s+([a-z]+)\\s+([a-z]+)\\s+([a-z]+)\\s+(0x[a-z\\d]+)\\s+([a-z\\s/()-A-Z:]+?..*\\d)");
 
     auto i=exp1.globalMatch(str);
     while(i.hasNext())
@@ -106,7 +106,10 @@ QString StringHandler::ToCurrentFileName(QString str)
 QList<QString> StringHandler::FindBreakPoint(QString str)
 {
     QList<QString> res;
-    QRegularExpression exp("(Breakpoint|Temporary breakpoint)\\s*(\\d+),\\s*(.*)at(.*):(\\d+)");
+    //QRegularExpression exp("(Breakpoint|Temporary breakpoint)\\s*(\\d+),\\s*(.*)at(.*):(\\d+)");
+    //QRegularExpression exp("(Breakpoint|Temporary breakpoint)\\s*(\\d+?),\\s*(.*)at([.A-Z\\n\\s:/-\\da-z]+?):(\\d+)");
+    QRegularExpression exp("(Breakpoint|Temporary breakpoint)\\s*(\\d+?),\\s*(.*)at ([\\\\A-Z/:.a-z\\d\\n-]+?):(\\d+)");
+    //(Breakpoint|Temporary breakpoint)\s*\d+,\s*.*at[.\nA-Z\s:a-z/-\d]+?:\d+
     auto i=exp.globalMatch(str);
     while(i.hasNext())
     {

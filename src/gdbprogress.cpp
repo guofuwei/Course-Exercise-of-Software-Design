@@ -323,6 +323,8 @@ void GDbProgress::on_addbreakpoint(QString filename, int line)
 }
 void GDbProgress::on_removebreakpoint(QString filename, int line)
 {
+    if(!HaveSetProgram())
+        return;
   QString statement("clear ");
   statement += filename;
   statement += ":";
