@@ -7,25 +7,23 @@
 #include <QTreeWidgetItem>
 
 // #include "texteditor.h"//ui包含
-#include "stringhandler.h"
-#include "compilerprocess.h"
 #include "audiorecord.h"
+#include "compilerprocess.h"
 #include "gdbprogress.h"
+#include "stringhandler.h"
 // #include "stringhandler.h"
 #include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
-namespace Ui
-{
-  class MainWindow;
+namespace Ui {
+class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
   void init();
@@ -36,7 +34,7 @@ public:
   void BreakPointTreeWidgetUpdate();
   void LocalsTreeWidgetUpdate();
 
-private slots:
+ private slots:
 
   void on_actionRun_triggered();
   void on_actionNext_triggered();
@@ -63,7 +61,11 @@ private slots:
 
   void on_pushButtonStopRecord_clicked();
 
-signals:
+  void on_pushButtonStartPlay_clicked();
+
+  void on_pushButtonStopPlay_clicked();
+
+ signals:
 
   void runprogram();
   void next();
@@ -72,7 +74,7 @@ signals:
   void continueprogram();
   void setlog(QString);
 
-private:
+ private:
   Ui::MainWindow *ui;
   GDbProgress *m_progress;
   QString m_sourceFilename;
@@ -81,4 +83,4 @@ private:
 
   AudioRecord *m_audio_record;
 };
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H
