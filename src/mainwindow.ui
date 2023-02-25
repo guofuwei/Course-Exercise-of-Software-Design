@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>973</width>
+    <width>1412</width>
     <height>773</height>
    </rect>
   </property>
@@ -330,6 +330,119 @@
        <property name="title">
         <string/>
        </property>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <widget class="QWidget" name="rightTabWidget">
+           <attribute name="title">
+            <string>PaintArea</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="0">
+             <widget class="MyPaint" name="PaintWidget" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QPushButton" name="pushButtonSavePic">
+                <property name="text">
+                 <string>Save</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonClearAll">
+                <property name="text">
+                 <string>ClearAll</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="RecordAudioWidget">
+           <attribute name="title">
+            <string>RecordAudio</string>
+           </attribute>
+           <widget class="TimerWidget" name="RecordTimerWidget" native="true">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>40</y>
+              <width>313</width>
+              <height>91</height>
+             </rect>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButtonStartRecord">
+            <property name="geometry">
+             <rect>
+              <x>12</x>
+              <y>12</y>
+              <width>97</width>
+              <height>29</height>
+             </rect>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>StartRecord</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButtonStopRecord">
+            <property name="geometry">
+             <rect>
+              <x>163</x>
+              <y>12</y>
+              <width>97</width>
+              <height>29</height>
+             </rect>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>StopRecord</string>
+            </property>
+           </widget>
+           <widget class="QPlainTextEdit" name="plainTextEditAudioLog">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>140</y>
+              <width>321</width>
+              <height>231</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -340,8 +453,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>973</width>
-     <height>26</height>
+     <width>1412</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -480,6 +593,18 @@
    <class>LogDialog</class>
    <extends>QTabWidget</extends>
    <header location="global">logdialog.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyPaint</class>
+   <extends>QWidget</extends>
+   <header>mypaint.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TimerWidget</class>
+   <extends>QWidget</extends>
+   <header>timerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

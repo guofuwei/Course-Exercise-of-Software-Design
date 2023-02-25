@@ -6,15 +6,17 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
-
 // #include "texteditor.h"//ui包含
-#include "gdbprogress.h"
 #include "stringhandler.h"
 #include "compilerprocess.h"
-
+#include "audiorecord.h"
+#include "gdbprogress.h"
+// #include "stringhandler.h"
+#include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
+namespace Ui
+{
   class MainWindow;
 }
 QT_END_NAMESPACE
@@ -29,13 +31,13 @@ public:
   void init();
   void DisableAll();
   void EnableAll();
-  void CompileCode(QString filepath,QStringList extra=QStringList());
+  void CompileCode(QString filepath, QStringList extra = QStringList());
   void CompileCurrentPage();
   void BreakPointTreeWidgetUpdate();
   void LocalsTreeWidgetUpdate();
 
-
 private slots:
+
   void on_actionRun_triggered();
   void on_actionNext_triggered();
   void on_actionStep_triggered();
@@ -53,7 +55,16 @@ private slots:
 
   void on_actioncompile_triggered();
 
+  void on_pushButtonSavePic_clicked();
+
+  void on_pushButtonClearAll_clicked();
+
+  void on_pushButtonStartRecord_clicked();
+
+  void on_pushButtonStopRecord_clicked();
+
 signals:
+
   void runprogram();
   void next();
   void step();
@@ -65,7 +76,9 @@ private:
   Ui::MainWindow *ui;
   GDbProgress *m_progress;
   QString m_sourceFilename;
+
   QString m_workdir;
 
+  AudioRecord *m_audio_record;
 };
 #endif // MAINWINDOW_H
