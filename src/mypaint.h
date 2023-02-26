@@ -16,6 +16,8 @@
 #include <QVector>
 #include <QWidget>
 
+#include "texteditor.h"
+
 class MyPaint : public QWidget {
   Q_OBJECT
  public:
@@ -30,6 +32,9 @@ class MyPaint : public QWidget {
 
  public:
  private:
+  QString kSavePath;
+  QString m_open_filename;
+  TextEditor *m_texteditor;
   int _lpress;        // 左键按下标志
   int _drag;          // 拖拽标志
   int _drawType;      // 描绘类型
@@ -46,6 +51,7 @@ class MyPaint : public QWidget {
   QVector<QPoint> _tpoint;          // 文字位置集合
   QVector<int> _shape;              // 图形类型集合，用于撤回功能
   QPoint _begin;  // 鼠标按下坐标、用于最后一个图形移动
+  void SetFilename(QString filename) { m_open_filename = filename; }
  signals:
 
  public slots:

@@ -1,8 +1,13 @@
 #include "mypaint.h"
 
+#include <QDateTime>
 #include <QDebug>
 #include <QVBoxLayout>
+
 MyPaint::MyPaint(QWidget *parent) : QWidget(parent) {
+  kSavePath = QDir::currentPath() + "/comment/pic";
+  m_open_filename = "";
+  qDebug() << "kSavePath:" << kSavePath;
   setMouseTracking(
       true);  // 开启鼠标实时追踪，监听鼠标移动事件，默认只有按下时才监听
   _lpress = false;               // 初始鼠标左键未按下
@@ -301,10 +306,16 @@ void MyPaint::Texts() {
 }
 
 void MyPaint::SavePic() {
-  // 弹出文件保存对话框
-  QString fileName = QFileDialog::getSaveFileName(this, tr("保存"), "new.jpg",
-                                                  "Image (*.jpg *.png *.bmp)");
-  if (fileName.length() > 0) {
+  if (m_open_filename == "") {
+    return;
+  }
+  QDateTime current_date_time = QDateTime::currentDateTime();
+  QString current_date = current_date_time.toString("yyyy_MM_dd_hh_mm_ss");
+  QString fullfilename =
+      kSavePath + "/" + m_open_filename + "-" + current_date + ".jpg";
+  //  qDebug() << "fullfilename:" << fullfilename;
+  //  return;
+  if (fullfilename.length() > 0) {
     _tEdit->hide();  // 防止文本输入框显示时，将文本框保存到图片
     QPixmap pixmap(size());     // 新建窗体大小的pixmap
     QPainter painter(&pixmap);  // 将pixmap作为画布
@@ -312,7 +323,7 @@ void MyPaint::SavePic() {
                      Qt::white);  // 设置绘画区域、画布颜色
     this->render(&painter);  // 将窗体渲染到painter，再由painter画到画布
     pixmap.copy(QRect(0, 30, size().width(), size().height() - 30))
-        .save(fileName);  // 不包含工具栏
+        .save(fullfilename);  // 不包含工具栏
   }
 }
 

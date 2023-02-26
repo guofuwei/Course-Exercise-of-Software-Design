@@ -36,7 +36,6 @@ class MainWindow : public QMainWindow {
   void StackTreeWidgetUpdate();
 
  private slots:
-
   void on_actionRun_triggered();
   void on_actionNext_triggered();
   void on_actionStep_triggered();
@@ -64,10 +63,11 @@ class MainWindow : public QMainWindow {
 
   void on_variableDeleteToolButton_clicked();
 
-
   void on_pushButtonStartPlay_clicked();
 
   void on_pushButtonStopPlay_clicked();
+
+  void on_pushButtonTest_clicked();
 
  signals:
 

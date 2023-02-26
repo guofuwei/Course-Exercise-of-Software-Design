@@ -160,21 +160,19 @@ void MainWindow::LocalsTreeWidgetUpdate() {
   }
 }
 
-void MainWindow::StackTreeWidgetUpdate()
-{
-    auto map = this->m_progress->GetStackInformation();
-    ui->StackTreeWidget->clear();
-    for (auto stackinfo:map)
-    {
-      QTreeWidgetItem *t = new QTreeWidgetItem();
-      t->setText(0, stackinfo["level"]);
-      t->setText(1, stackinfo["func"]);
-      t->setText(2, stackinfo["line"]);
-      t->setText(3, stackinfo["arg"]);
-      t->setText(4, stackinfo["file"]);
+void MainWindow::StackTreeWidgetUpdate() {
+  auto map = this->m_progress->GetStackInformation();
+  ui->StackTreeWidget->clear();
+  for (auto stackinfo : map) {
+    QTreeWidgetItem *t = new QTreeWidgetItem();
+    t->setText(0, stackinfo["level"]);
+    t->setText(1, stackinfo["func"]);
+    t->setText(2, stackinfo["line"]);
+    t->setText(3, stackinfo["arg"]);
+    t->setText(4, stackinfo["file"]);
 
-      ui->StackTreeWidget->addTopLevelItem(t);
-    }
+    ui->StackTreeWidget->addTopLevelItem(t);
+  }
 }
 
 void MainWindow::on_actionRun_triggered() { emit runprogram(); }
@@ -186,7 +184,8 @@ void MainWindow::on_actionStep_triggered() { emit step(); }
 void MainWindow::on_actionOpen_Folder_triggered() {
   QStringList sourceFilePatterns = QStringList({"*.cpp", "*.c", "*.cc"});
   QStringList headerFilePatterns = QStringList({"*.hpp", "*.h"});
-  QString filename = QFileDialog::getExistingDirectory(this,"open ","F:\\tool\\minGw\\code");
+  QString filename =
+      QFileDialog::getExistingDirectory(this, "open ", "F:\\tool\\minGw\\code");
   //  qDebug() << filename << endl;
   m_workdir = filename;
   QDir *dir = new QDir(filename);
@@ -222,7 +221,7 @@ void MainWindow::on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item,
                                                        int column) {
   QString fullFilename = m_workdir + "/" + item->text(1);
   // QString fullFilename = m_workdir + "/" + item->text(column);
-  //qDebug() << fullFilename << endl;
+  // qDebug() << fullFilename << endl;
   ui->GuiTextEditor->readfromfile(fullFilename);
 }
 void MainWindow::on_actionFinish_triggered() { emit finish(); }
@@ -236,7 +235,9 @@ void MainWindow::on_listfile(QString name, int line, int index) {
 
 void MainWindow::on_tablechange(QString filepath) {
   m_sourceFilename = filepath;
-  qDebug() << m_sourceFilename;
+  QFileInfo fileInfo = QFileInfo(filepath);
+  ui->PaintWidget->SetFilename(fileInfo.fileName());
+  //  qDebug() << m_sourceFilename;
 }
 
 void MainWindow::on_programload() {
@@ -250,8 +251,8 @@ void MainWindow::on_update() {
   BreakPointTreeWidgetUpdate();
   LocalsTreeWidgetUpdate();
   StackTreeWidgetUpdate();
-  //this->ui->GuiTextEditor->addannotate(2,"hello");
-  //m_progress->GetStackInformation();
+  // this->ui->GuiTextEditor->addannotate(2,"hello");
+  // m_progress->GetStackInformation();
   qDebug() << m_progress->state();
 }
 void MainWindow::on_actionContinue_triggered() { emit continueprogram(); }
@@ -310,19 +311,29 @@ void MainWindow::on_pushButtonStopPlay_clicked() {
   ui->RecordTimerWidget->reset();
 }
 
-void MainWindow::on_variableDeleteToolButton_clicked()
-{
-    this->ui->GuiTextEditor->addcurrentannotate("hi");
-    auto text=ui->variableAddLineEdit->text();
-    if(text.isEmpty())
-        return;
-    auto Value=this->m_progress->GetExpression(text);
-    if(Value.isEmpty())
-    {
-        return;
-    }
-    QTreeWidgetItem *t = new QTreeWidgetItem();
-    t->setText(0, text);
-    t->setText(2, Value);
-    ui->localsTreeWidget->addTopLevelItem(t);
+void MainWindow::on_variableDeleteToolButton_clicked() {
+  this->ui->GuiTextEditor->addcurrentannotate("hi");
+  auto text = ui->variableAddLineEdit->text();
+  if (text.isEmpty()) return;
+  auto Value = this->m_progress->GetExpression(text);
+  if (Value.isEmpty()) {
+    return;
+  }
+  QTreeWidgetItem *t = new QTreeWidgetItem();
+  t->setText(0, text);
+  t->setText(2, Value);
+  ui->localsTreeWidget->addTopLevelItem(t);
+}
+
+void MainWindow::on_pushButtonTest_clicked() {
+  //  qDebug() << ui->GuiTextEditor->getcurrentannotate();
+  QDateTime current_date_time = QDateTime::currentDateTime();
+  QString current_date = current_date_time.toString("yyyy_MM_dd_hh_mm_ss");
+  //  qDebug() << current_date;
+  if (ui->GuiTextEditor->getcurrentannotate().endsWith(";\r\n")) {
+    ui->GuiTextEditor->addcurrentannotate("//");
+  }
+  if (ui->GuiTextEditor->getcurrentannotate() != "") {
+    ui->GuiTextEditor->addcurrentannotate("test");
+  }
 }

@@ -4,9 +4,9 @@
 #include <QDebug>
 #include <QDir>
 AudioRecord::AudioRecord() {
-  m_dest_file_path = QDir::currentPath();
+  m_dest_file_path = QDir::currentPath() + "/comment/audio";
   m_dest_filename = "temp.pcm";
-  m_source_file_path = QDir::currentPath();
+  m_source_file_path = QDir::currentPath() + "/comment/audio";
   m_source_filename = "temp.pcm";
   m_is_recording = false;
   m_is_playing = false;
@@ -25,9 +25,9 @@ AudioRecord::AudioRecord() {
 }
 AudioRecord::AudioRecord(QPlainTextEdit* plaintextedit,
                          TimerWidget* timerwidget) {
-  m_dest_file_path = QDir::currentPath();
+  m_dest_file_path = QDir::currentPath() + "/comment/audio";
   m_dest_filename = "temp.pcm";
-  m_source_file_path = QDir::currentPath();
+  m_source_file_path = QDir::currentPath() + "/comment/audio";
   m_source_filename = "temp.pcm";
   m_is_recording = false;
   m_is_playing = false;

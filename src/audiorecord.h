@@ -9,6 +9,7 @@
 #include <QIODevice>
 #include <QPlainTextEdit>
 
+#include "texteditor.h"
 #include "timerwidget.h"
 
 class AudioRecord : public QObject {
@@ -20,6 +21,7 @@ class AudioRecord : public QObject {
   void AudioLog(QString content);
 
  private:
+  TextEditor* m_texteditor;
   QFile m_dest_file;
   QFile m_source_file;
   bool m_is_recording;
