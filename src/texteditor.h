@@ -38,6 +38,7 @@ public:
     void addannotate(int line,QString);
     void addcurrentannotate(QString);
     QString getcurrentannotate();
+    QString getfilename(int index);
     QByteArray GetContent(int index=-1);
 
 private slots:

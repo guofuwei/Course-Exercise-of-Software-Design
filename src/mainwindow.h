@@ -5,6 +5,7 @@
 #include <QSplitter>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QMessageBox>
 
 // #include "texteditor.h"//ui包含
 #include "audiorecord.h"
@@ -69,7 +70,11 @@ class MainWindow : public QMainWindow {
 
   void on_pushButtonStopPlay_clicked();
 
- signals:
+  void on_actionsave_triggered();
+
+  void on_actionsavesomewhere_triggered();
+
+signals:
 
   void runprogram();
   void next();

@@ -312,7 +312,7 @@ void MainWindow::on_pushButtonStopPlay_clicked() {
 
 void MainWindow::on_variableDeleteToolButton_clicked()
 {
-    this->ui->GuiTextEditor->addcurrentannotate("hi");
+    //this->ui->GuiTextEditor->addcurrentannotate("hi");
     auto text=ui->variableAddLineEdit->text();
     if(text.isEmpty())
         return;
@@ -325,4 +325,43 @@ void MainWindow::on_variableDeleteToolButton_clicked()
     t->setText(0, text);
     t->setText(2, Value);
     ui->localsTreeWidget->addTopLevelItem(t);
+}
+
+void MainWindow::on_actionsave_triggered()
+{
+    if(this->ui->GuiTextEditor->count()<=0)
+    {
+        QMessageBox::critical(this,"","未打开文件");
+        return;
+    }
+    auto index=this->ui->GuiTextEditor->currentIndex();
+    auto filename=this->ui->GuiTextEditor->getfilename(index);
+    if(QMessageBox::question(this,"",QString("是否保存文件 ")+filename)==QMessageBox::Yes)
+    {
+        auto file=QFile(filename);
+        if(!file.open(QIODevice::ReadWrite))
+            QMessageBox::critical(this,"","文件打开失败");
+        file.write(this->ui->GuiTextEditor->GetContent(index));
+        file.close();
+    };
+
+}
+
+void MainWindow::on_actionsavesomewhere_triggered()
+{
+    if(this->ui->GuiTextEditor->count()<=0)
+    {
+        QMessageBox::critical(this,"","未打开文件");
+        return;
+    }
+    auto index=this->ui->GuiTextEditor->currentIndex();
+    auto filepath=QFileDialog::getSaveFileName();
+    auto file=QFile(filepath);
+    if(filepath.isEmpty())
+        return ;
+    if(!file.open(QIODevice::ReadWrite))
+        QMessageBox::critical(this,"","文件打开失败");
+    file.write(this->ui->GuiTextEditor->GetContent(index));
+    file.close();
+
 }

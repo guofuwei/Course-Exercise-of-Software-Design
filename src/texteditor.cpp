@@ -184,6 +184,13 @@ QString TextEditor::getcurrentannotate()
     return this->m_scilist.at(index)->text(line);
 }
 
+QString TextEditor::getfilename(int index)
+{
+    if(this->count()>0)
+        return this->m_filepathlist.at(index);
+    return QString();
+}
+
 QByteArray TextEditor::GetContent(int index)
 {
     if (index == -1) {
