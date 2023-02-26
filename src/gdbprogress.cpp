@@ -21,6 +21,7 @@ QByteArray GDbProgress::readoutput()
   do {
     //qDebug()<<
       this->waitForReadyRead(200);
+      //this->waitForBytesWritten(400);
     bytes = this->readAll();
     output += bytes;
   } while (!bytes.isEmpty());
@@ -115,7 +116,9 @@ QMap<QString, QPair<QString, QString>> GDbProgress::GetLocalInfo()
     if (isrun == false) {
       return res;
     }
-    auto output=this->run("info local\n");
+    //auto output=this->run("info local\n");
+    QString output=this->run("info arg\ninfo local\n");
+    output.remove("(gdb)");
     StringHandler::GetLocalValue(output, res);
     for (auto name : res.keys()) {
       statement += QString("whatis " + name + "\n").toLatin1();
@@ -136,6 +139,30 @@ QList<QMap<QString, QString>> GDbProgress::GetBreakPointInfo()
 {
   auto str = this->run("info break\n");
   return StringHandler::ToBreakPointInfo(str);
+}
+
+QList<QMap<QString, QString> > GDbProgress::GetStackInformation()
+{
+     auto str = this->run("info stack\n");
+     return StringHandler::ToStackInfo(str);
+
+}
+
+QString GDbProgress::GetExpression(QString statement)
+{
+    if(!this->HaveSetProgram())
+    {
+        emit setlog("[gdb error] 程序未编译");
+        return QString();
+    }
+    auto res=this->run(QString("p ")+statement);
+    res=StringHandler::RemoveEndGdb(res).toUtf8();
+    auto error=this->readAllStandardError();
+    if(!error.isEmpty())
+    {
+        emit setlog(QString("[gdb error]")+error);
+    }
+    return res;
 }
 
 QList<QString> GDbProgress::GetLocalPos()

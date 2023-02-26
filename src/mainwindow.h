@@ -35,6 +35,7 @@ public:
   void CompileCurrentPage();
   void BreakPointTreeWidgetUpdate();
   void LocalsTreeWidgetUpdate();
+  void StackTreeWidgetUpdate();
 
 private slots:
 
@@ -62,6 +63,8 @@ private slots:
   void on_pushButtonStartRecord_clicked();
 
   void on_pushButtonStopRecord_clicked();
+
+  void on_variableDeleteToolButton_clicked();
 
 signals:
 

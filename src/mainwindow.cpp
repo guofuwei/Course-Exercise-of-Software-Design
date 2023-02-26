@@ -27,6 +27,7 @@ void MainWindow::init()
                                             << this->height() * 1 / 3);
   this->DisableAll();
   this->m_progress = new GDbProgress();
+  this->ui->GuiTabWidgetMiddleTop->setTabText(1,"log");
   connect(this, &MainWindow::setlog, this->ui->LogWidget, &LogDialog::on_setcontent);
 
   // this->CompileCurrentPage();
@@ -101,6 +102,7 @@ void MainWindow::CompileCode(QString filepath, QStringList extra)
     return;
   }
   sourcefile.write(data);
+  sourcefile.close();
   t->compile();
   // https://www.coder.work/article/6491894
   // disconnect(t,&CompilerProcess::setlog,this->ui->LogWidget,&LogDialog::on_setcontent);
@@ -164,6 +166,23 @@ void MainWindow::LocalsTreeWidgetUpdate()
   }
 }
 
+void MainWindow::StackTreeWidgetUpdate()
+{
+    auto map = this->m_progress->GetStackInformation();
+    ui->StackTreeWidget->clear();
+    for (auto stackinfo:map)
+    {
+      QTreeWidgetItem *t = new QTreeWidgetItem();
+      t->setText(0, stackinfo["level"]);
+      t->setText(1, stackinfo["func"]);
+      t->setText(2, stackinfo["line"]);
+      t->setText(3, stackinfo["arg"]);
+      t->setText(4, stackinfo["file"]);
+
+      ui->StackTreeWidget->addTopLevelItem(t);
+    }
+}
+
 void MainWindow::on_actionRun_triggered() { emit runprogram(); }
 
 void MainWindow::on_actionNext_triggered() { emit next(); }
@@ -215,7 +234,7 @@ void MainWindow::on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, in
 {
   QString fullFilename = m_workdir + "/" + item->text(1);
   // QString fullFilename = m_workdir + "/" + item->text(column);
-  qDebug() << fullFilename << endl;
+  //qDebug() << fullFilename << endl;
   ui->GuiTextEditor->readfromfile(fullFilename);
 }
 void MainWindow::on_actionFinish_triggered()
@@ -249,6 +268,9 @@ void MainWindow::on_update()
 {
   BreakPointTreeWidgetUpdate();
   LocalsTreeWidgetUpdate();
+  StackTreeWidgetUpdate();
+  //this->ui->GuiTextEditor->addannotate(2,"hello");
+  //m_progress->GetStackInformation();
   qDebug() << m_progress->state();
 }
 
@@ -281,4 +303,21 @@ void MainWindow::on_actioncompile_triggered()
 void MainWindow::on_pushButtonStopRecord_clicked()
 {
   ui->RecordTimerWidget->reset();
+}
+
+void MainWindow::on_variableDeleteToolButton_clicked()
+{
+    this->ui->GuiTextEditor->addcurrentannotate("hi");
+    auto text=ui->variableAddLineEdit->text();
+    if(text.isEmpty())
+        return;
+    auto Value=this->m_progress->GetExpression(text);
+    if(Value.isEmpty())
+    {
+        return;
+    }
+    QTreeWidgetItem *t = new QTreeWidgetItem();
+    t->setText(0, text);
+    t->setText(2, Value);
+    ui->localsTreeWidget->addTopLevelItem(t);
 }

@@ -23,6 +23,8 @@ public:
 
   QMap<QString, QPair<QString, QString>> GetLocalInfo();
   QList<QMap<QString, QString>> GetBreakPointInfo();
+  QList<QMap<QString, QString>> GetStackInformation();
+  QString GetExpression(QString statement);
 
   QList<QString> GetLocalPos();
   QString GetCurrentFileName();

@@ -65,7 +65,7 @@ void TextEditor::initsci()
   sciScintilla->setFoldMarginColors(Qt::gray, Qt::lightGray);  // 折叠栏颜色
   sciScintilla->setMarginType(0, QsciScintilla::NumberMargin); // 设置编号为0的页边显示行号。
   sciScintilla->setMarginLineNumbers(0, true);                 // 对该页边启用行号
-  sciScintilla->setMarginWidth(0, 30);                         // 设置页边宽度
+  sciScintilla->setMarginWidth(0, 50);                         // 设置页边宽度
   // m_sci->setmargin
   sciScintilla->setMarginType(1, QsciScintilla::SymbolMargin);
   sciScintilla->setWrapMode(QsciScintilla::WrapWord);
@@ -139,6 +139,49 @@ void TextEditor::removeallbreakpoint()
     if(i==-1)
         return;
     this->m_scilist.at(i)->markerDeleteAll(1);
+    this->m_scilist.at(i)->markerDeleteAll(2);
+}
+
+void TextEditor::addannotate(int line, QString str)
+{
+    if(this->count()<=0)
+    {
+        return;
+    }
+    auto index=this->currentIndex();
+    this->m_scilist.at(index)->annotate(line,str,0);
+
+}
+
+void TextEditor::addcurrentannotate(QString str)
+{
+
+    if(this->count()<=0)
+    {
+        return;
+    }
+    auto index=this->currentIndex();
+    int line,pos;
+    this->m_scilist.at(index)->getCursorPosition(&line,&pos);
+    auto text= this->m_scilist.at(index)->text(line);
+    if(text.endsWith("\r\n"))
+      this->m_scilist.at(index)->insertAt(str,line,this->m_scilist.at(index)->lineLength(line)-2);
+    else if(text.endsWith("\n"))
+    {
+        this->m_scilist.at(index)->insertAt(str,line,this->m_scilist.at(index)->lineLength(line)-1);
+    }
+}
+
+QString TextEditor::getcurrentannotate()
+{
+    if(this->count()<=0)
+    {
+        return QString();
+    }
+    auto index=this->currentIndex();
+    int line,pos;
+    this->m_scilist.at(index)->getCursorPosition(&line,&pos);
+    return this->m_scilist.at(index)->text(line);
 }
 
 QByteArray TextEditor::GetContent(int index)

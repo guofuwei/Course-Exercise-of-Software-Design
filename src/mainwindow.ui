@@ -132,15 +132,11 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="loggerWidget">
+           <widget class="QWidget" name="loggerWidget1">
             <attribute name="title">
              <string>Logger</string>
             </attribute>
-            <layout class="QGridLayout" name="gridLayout_3">
-             <item row="1" column="0">
-              <widget class="LogDialog" name="LogWidget"/>
-             </item>
-            </layout>
+            <layout class="QGridLayout" name="gridLayout_3"/>
            </widget>
           </widget>
          </widget>
@@ -174,6 +170,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="currentIndex">
+            <number>1</number>
            </property>
            <widget class="QWidget" name="breakpointsWidget">
             <attribute name="title">
@@ -321,6 +320,68 @@
              </item>
             </layout>
            </widget>
+           <widget class="QWidget" name="loggerWidget">
+            <property name="contextMenuPolicy">
+             <enum>Qt::DefaultContextMenu</enum>
+            </property>
+            <property name="accessibleName">
+             <string>log</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>log</string>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <attribute name="title">
+             <string>页</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_10">
+             <item row="0" column="0">
+              <widget class="LogDialog" name="LogWidget"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="stackWidget">
+            <attribute name="title">
+             <string>stack</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_9">
+             <item row="0" column="0">
+              <layout class="QGridLayout" name="gridLayout_8">
+               <item row="0" column="0">
+                <widget class="QTreeWidget" name="StackTreeWidget">
+                 <column>
+                  <property name="text">
+                   <string>level</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>func</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>line</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>arg</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>file</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
           </widget>
          </widget>
         </item>
@@ -454,7 +515,7 @@
      <x>0</x>
      <y>0</y>
      <width>1412</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -35,6 +35,9 @@ public:
     void setselected(int line,int index =-1);
     bool changepage(QString name);
     void removeallbreakpoint();
+    void addannotate(int line,QString);
+    void addcurrentannotate(QString);
+    QString getcurrentannotate();
     QByteArray GetContent(int index=-1);
 
 private slots:
