@@ -67,7 +67,7 @@
           </widget>
           <widget class="QTabWidget" name="GuiTabWidgetLeftBottom">
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="LocalsWidget">
             <attribute name="title">
@@ -401,8 +401,8 @@
            <attribute name="title">
             <string>PaintArea</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_7">
-            <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="100,1,1">
+            <item>
              <widget class="MyPaint" name="PaintWidget" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -412,8 +412,25 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item>
+             <widget class="QPlainTextEdit" name="plainTextEditPaintLog">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QPushButton" name="pushButtonLoadPic">
+                <property name="text">
+                 <string>Load</string>
+                </property>
+               </widget>
+              </item>
               <item>
                <widget class="QPushButton" name="pushButtonSavePic">
                 <property name="text">
@@ -458,7 +475,7 @@
               <x>10</x>
               <y>210</y>
               <width>331</width>
-              <height>181</height>
+              <height>131</height>
              </rect>
             </property>
            </widget>

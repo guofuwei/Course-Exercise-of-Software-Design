@@ -7,7 +7,7 @@ int main()
   int c = a + b;
   a = 12;
   b = a - c;
-  printf("Please input a num:");
-  scanf("%d", &c);
-  return 0;
+  printf("Please input a num:");//[COMMENT-AUDIO-test.cpp-2023_02_27_21_47_22]
+  scanf("%d", &c);//[COMMENT-AUDIO-test.cpp-2023_02_27_21_31_48][COMMENT-AUDIO-test.cpp-2023_02_27_21_36_43]
+  return 0; //[COMMENT-PIC-test.cpp-2023_02_27_20_01_58][COMMENT-PIC-test.cpp-2023_02_27_22_21_53][COMMENT-PIC-test.cpp-2023_02_27_22_22_17][COMMENT-PIC-test.cpp-2023_02_27_22_27_56]
 }

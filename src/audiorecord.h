@@ -19,9 +19,12 @@ class AudioRecord : public QObject {
   AudioRecord(QPlainTextEdit* plaintextedit, TimerWidget* timerwidget);
   ~AudioRecord();
   void AudioLog(QString content);
+  void SetFilename(QString filename) { m_open_filename = filename; }
+  void SetTextEditor(TextEditor* texteditor) { m_texteditor = texteditor; }
 
  private:
   TextEditor* m_texteditor;
+  QString m_open_filename;
   QFile m_dest_file;
   QFile m_source_file;
   bool m_is_recording;

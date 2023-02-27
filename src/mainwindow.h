@@ -69,6 +69,8 @@ class MainWindow : public QMainWindow {
 
   void on_pushButtonTest_clicked();
 
+  void on_pushButtonLoadPic_clicked();
+
  signals:
 
   void runprogram();

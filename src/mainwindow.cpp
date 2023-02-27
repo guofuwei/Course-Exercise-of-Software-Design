@@ -42,6 +42,12 @@ void MainWindow::init() {
   ui->RecordTimerWidget->showTime();
   m_audio_record =
       new AudioRecord(ui->plainTextEditAudioLog, ui->RecordTimerWidget);
+  // 为了保存图片和音频的设置
+  m_audio_record->SetTextEditor(ui->GuiTextEditor);
+  ui->PaintWidget->SetTextEditor(ui->GuiTextEditor);
+  ui->PaintWidget->SetPlainTextLog(ui->plainTextEditPaintLog);
+  ui->plainTextEditAudioLog->setReadOnly(true);
+  ui->plainTextEditPaintLog->setReadOnly(true);
   //  连接信号函数
   connect(this, &MainWindow::runprogram, this->m_progress,
           &GDbProgress::on_runprogram);
@@ -237,6 +243,7 @@ void MainWindow::on_tablechange(QString filepath) {
   m_sourceFilename = filepath;
   QFileInfo fileInfo = QFileInfo(filepath);
   ui->PaintWidget->SetFilename(fileInfo.fileName());
+  m_audio_record->SetFilename(fileInfo.fileName());
   //  qDebug() << m_sourceFilename;
 }
 
@@ -294,6 +301,7 @@ void MainWindow::on_pushButtonStartPlay_clicked() {
     return;
   }
   if (!m_audio_record->StartPlaying()) {
+    m_audio_record->AudioLog("暂时没有音频文件\n");
     return;
   }
   ui->RecordTimerWidget->reset();
@@ -337,3 +345,5 @@ void MainWindow::on_pushButtonTest_clicked() {
     ui->GuiTextEditor->addcurrentannotate("test");
   }
 }
+
+void MainWindow::on_pushButtonLoadPic_clicked() { ui->PaintWidget->LoadPic(); }

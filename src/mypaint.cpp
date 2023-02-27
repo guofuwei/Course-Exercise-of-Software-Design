@@ -4,10 +4,12 @@
 #include <QDebug>
 #include <QVBoxLayout>
 
+#include "utils.h"
+
 MyPaint::MyPaint(QWidget *parent) : QWidget(parent) {
   kSavePath = QDir::currentPath() + "/comment/pic";
   m_open_filename = "";
-  qDebug() << "kSavePath:" << kSavePath;
+  //  qDebug() << "kSavePath:" << kSavePath;
   setMouseTracking(
       true);  // 开启鼠标实时追踪，监听鼠标移动事件，默认只有按下时才监听
   _lpress = false;               // 初始鼠标左键未按下
@@ -95,6 +97,7 @@ void MyPaint::ClearAll() {
   _tpoint.clear();
   _shape.clear();
   _begin = pos();
+  _pixmap.fill(Qt::white);
   update();
 }
 
@@ -313,8 +316,24 @@ void MyPaint::SavePic() {
   QString current_date = current_date_time.toString("yyyy_MM_dd_hh_mm_ss");
   QString fullfilename =
       kSavePath + "/" + m_open_filename + "-" + current_date + ".jpg";
-  //  qDebug() << "fullfilename:" << fullfilename;
-  //  return;
+  QString code = m_texteditor->getcurrentannotate();
+  //  if (code == "") return;
+  //  //  qDebug() << "code:" << code << endl;
+  //  int start_pos = Cesd::GetCommentStartPos(code, 1);
+  //  int stop_pos = -1;
+  //  if (start_pos != -1) {
+  //    stop_pos = Cesd::GetCommentStopPos(code, start_pos);
+  //    QString pic_comment = code.mid(start_pos, stop_pos - start_pos + 1);
+  //    //    qDebug() << "Pic Comment:" << pic_comment;
+  //  }
+  // 添加图片注释
+  QString comment =
+      QString("[COMMENT-PIC-%1-%2]").arg(m_open_filename).arg(current_date);
+  if (code.endsWith(";\r\n")) {
+    m_texteditor->addcurrentannotate("//");
+  }
+  m_texteditor->addcurrentannotate(comment);
+  // 保存图片至$ROOT/comment/pic
   if (fullfilename.length() > 0) {
     _tEdit->hide();  // 防止文本输入框显示时，将文本框保存到图片
     QPixmap pixmap(size());     // 新建窗体大小的pixmap
@@ -322,15 +341,36 @@ void MyPaint::SavePic() {
     painter.fillRect(QRect(0, 0, size().width(), size().height()),
                      Qt::white);  // 设置绘画区域、画布颜色
     this->render(&painter);  // 将窗体渲染到painter，再由painter画到画布
-    pixmap.copy(QRect(0, 30, size().width(), size().height() - 30))
+    pixmap.copy(QRect(0, 30, size().width(), size().height() - 32))
         .save(fullfilename);  // 不包含工具栏
   }
 }
 
-void MyPaint::OpenPic() {
+void MyPaint::LoadPic() {
   // 弹出文件打开对话框
-  QString picPath = QFileDialog::getOpenFileName(this, tr("打开"), "",
-                                                 "Image Files(*.jpg *.png)");
+  //  QString picPath = QFileDialog::getOpenFileName(this, tr("打开"), "",
+  //                                                 "Image Files(*.jpg
+  //
+  //                                           *.png)");
+  QString code = m_texteditor->getcurrentannotate();
+  if (code == "") return;
+  qDebug() << "code:" << code;
+  int start_pos = Cesd::GetCommentStartPos(code, 1);
+  if (start_pos == -1) return;
+  int stop_pos = Cesd::GetCommentStopPos(code);
+  QString pic_comment = code.mid(start_pos, stop_pos - start_pos + 1);
+  qDebug() << "Pic Comment:" << pic_comment;
+  QList<QString> parse_result = Cesd::ParseComment(pic_comment, 1);
+  // test
+  for (const auto &one : parse_result) {
+    qDebug() << "Parse str:" << one;
+  }
+
+  QString filename = parse_result[0] + "-" + parse_result[1] + ".jpg";
+  qDebug() << "filename:" << filename;
+  QString picPath = kSavePath + "/" + filename;
+  qDebug() << "picPath:" << picPath;
+  //  return;
   if (!picPath.isEmpty()) {  // 用户选择了文件
     QPixmap pix;
     pix.load(picPath);  // 加载图片
@@ -338,6 +378,7 @@ void MyPaint::OpenPic() {
     p.drawPixmap(0, 30, pix);  // 添加工具栏的空间
     _openflag = 1;             // 设置文件打开标志
     update();                  // 触发窗体重绘，将图片画到窗体
+    PaintLog("加载图片成功\n");
   }
 }
 
@@ -366,4 +407,11 @@ void MyPaint::Cancel() {
     _drag = 0;  // 设置为非拖拽模式
     update();
   }
+}
+
+void MyPaint::PaintLog(QString content) {
+  if (m_plaintextedit_log == NULL) {
+    return;
+  }
+  m_plaintextedit_log->insertPlainText(content);
 }

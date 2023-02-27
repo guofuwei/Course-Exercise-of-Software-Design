@@ -16,3 +16,5 @@ $ROOT:程序运行根目录
 图片存放的位置:`$ROOT/comment/pic`
 
 音频存放的位置:`$ROOT/comment/audio`
+
+**注意：文件存放路径必须存在，否则会报错**
