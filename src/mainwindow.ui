@@ -587,14 +587,14 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_Folder"/>
+    <addaction name="actionsave"/>
+    <addaction name="actionsavesomewhere"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
     <addaction name="actioncompile"/>
-    <addaction name="actionsave"/>
-    <addaction name="actionsavesomewhere"/>
    </widget>
    <widget class="QMenu" name="menuControl">
     <property name="title">
@@ -706,6 +706,16 @@
   <action name="actioncompile">
    <property name="text">
     <string>编译</string>
+   </property>
+  </action>
+  <action name="actionsave1">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="actionsavesomewhere1">
+   <property name="text">
+    <string>另存为</string>
    </property>
   </action>
   <action name="actionsave">

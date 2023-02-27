@@ -37,6 +37,7 @@ public:
     void removeallbreakpoint();
     void addannotate(int line,QString);
     void addcurrentannotate(QString);
+    void replacecurrentannotate(QString);
     QString getcurrentannotate();
     QString getfilename(int index);
     QByteArray GetContent(int index=-1);

@@ -172,6 +172,36 @@ void TextEditor::addcurrentannotate(QString str)
     }
 }
 
+void TextEditor::replacecurrentannotate(QString str)
+{
+    if(this->count()<=0)
+    {
+        return;
+    }
+    auto index=this->currentIndex();
+    int line,pos;
+    this->m_scilist.at(index)->getCursorPosition(&line,&pos);
+    auto text= this->m_scilist.at(index)->text(line);
+    if(text.isEmpty()||text=="\r"||text=="\n"||text=="\r\n")
+    {
+        this->m_scilist.at(index)->insertAt(str,line,0);
+    }
+       else {
+        if(text.endsWith("\r\n"))
+          this->m_scilist.at(index)->setSelection(line,0,line,text.length()-2);
+        else if(text.endsWith("\n")|text.endsWith("\r"))
+        {
+            this->m_scilist.at(index)->setSelection(line,0,line,text.length()-1);
+        }
+        else
+        {
+            this->m_scilist.at(index)->setSelection(line,0,line,text.length());
+
+        }
+        this->m_scilist.at(index)->replaceSelectedText(str);
+    }
+}
+
 QString TextEditor::getcurrentannotate()
 {
     if(this->count()<=0)

@@ -97,11 +97,11 @@ void MainWindow::CompileCode(QString filepath, QStringList extra) {
   auto index = this->ui->GuiTextEditor->currentIndex();
   auto data = this->ui->GuiTextEditor->GetContent(index);
   auto sourcefile = QFile(m_sourceFilename);
-  if (!sourcefile.open(QIODevice::ReadWrite)) {
+  if (!sourcefile.open(QIODevice::ReadWrite|QIODevice::Truncate)) {
     emit setlog(QString("[main] 无法打开") + m_sourceFilename);
     return;
   }
-  sourcefile.write(data);
+  qDebug()<<sourcefile.write(data);
   sourcefile.close();
   t->compile();
   // https://www.coder.work/article/6491894
@@ -312,6 +312,7 @@ void MainWindow::on_pushButtonStopPlay_clicked() {
 
 void MainWindow::on_variableDeleteToolButton_clicked()
 {
+    //this->ui->GuiTextEditor->replacecurrentannotate("hhh");
     //this->ui->GuiTextEditor->addcurrentannotate("hi");
     auto text=ui->variableAddLineEdit->text();
     if(text.isEmpty())
@@ -325,6 +326,7 @@ void MainWindow::on_variableDeleteToolButton_clicked()
     t->setText(0, text);
     t->setText(2, Value);
     ui->localsTreeWidget->addTopLevelItem(t);
+
 }
 
 void MainWindow::on_actionsave_triggered()
@@ -339,7 +341,7 @@ void MainWindow::on_actionsave_triggered()
     if(QMessageBox::question(this,"",QString("是否保存文件 ")+filename)==QMessageBox::Yes)
     {
         auto file=QFile(filename);
-        if(!file.open(QIODevice::ReadWrite))
+        if(!file.open(QIODevice::ReadWrite|QIODevice::Truncate))
             QMessageBox::critical(this,"","文件打开失败");
         file.write(this->ui->GuiTextEditor->GetContent(index));
         file.close();
@@ -363,5 +365,4 @@ void MainWindow::on_actionsavesomewhere_triggered()
         QMessageBox::critical(this,"","文件打开失败");
     file.write(this->ui->GuiTextEditor->GetContent(index));
     file.close();
-
 }
