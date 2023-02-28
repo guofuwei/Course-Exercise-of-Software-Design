@@ -16,15 +16,17 @@
 #include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+  class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
   Q_OBJECT
 
- public:
+public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
   void init();
@@ -36,8 +38,7 @@ class MainWindow : public QMainWindow {
   void LocalsTreeWidgetUpdate();
   void StackTreeWidgetUpdate();
 
- private slots:
-
+private slots:
   void on_actionRun_triggered();
   void on_actionNext_triggered();
   void on_actionStep_triggered();
@@ -65,7 +66,6 @@ class MainWindow : public QMainWindow {
 
   void on_variableDeleteToolButton_clicked();
 
-
   void on_pushButtonStartPlay_clicked();
 
   void on_pushButtonStopPlay_clicked();
@@ -73,6 +73,10 @@ class MainWindow : public QMainWindow {
   void on_actionsave_triggered();
 
   void on_actionsavesomewhere_triggered();
+
+  void on_pushButtonTest_clicked();
+
+  void on_pushButtonLoadPic_clicked();
 
 signals:
 
@@ -83,7 +87,7 @@ signals:
   void continueprogram();
   void setlog(QString);
 
- private:
+private:
   Ui::MainWindow *ui;
   GDbProgress *m_progress;
   QString m_sourceFilename;
@@ -92,4 +96,4 @@ signals:
 
   AudioRecord *m_audio_record;
 };
-#endif  // MAINWINDOW_H
+#endif // MAINWINDOW_H
