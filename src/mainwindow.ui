@@ -166,7 +166,7 @@
             </sizepolicy>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>3</number>
            </property>
            <widget class="QWidget" name="breakpointsWidget">
             <attribute name="title">
@@ -248,7 +248,7 @@
              <item row="0" column="0">
               <widget class="QTreeWidget" name="breakpointsTreeWidget">
                <property name="columnCount">
-                <number>12</number>
+                <number>7</number>
                </property>
                <column>
                 <property name="text">
@@ -283,31 +283,6 @@
                <column>
                 <property name="text">
                  <string>File</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Fullname</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Line</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Thread Groups</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Times</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Original Location</string>
                 </property>
                </column>
               </widget>
@@ -373,6 +348,16 @@
                 </widget>
                </item>
               </layout>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="stdioWidget">
+            <attribute name="title">
+             <string>stdio</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="0" column="0">
+              <widget class="QPlainTextEdit" name="plainTextEditStdOut"/>
              </item>
             </layout>
            </widget>

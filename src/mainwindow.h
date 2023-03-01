@@ -80,6 +80,10 @@ class MainWindow : public QMainWindow {
 
   void on_actionImport_File_triggered();
 
+  // custom
+  void on_gdb_readoutput();
+  void on_gdb_readerror();
+
  signals:
 
   void runprogram();
