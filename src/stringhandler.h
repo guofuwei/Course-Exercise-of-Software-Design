@@ -19,6 +19,8 @@ public:
     static QMap<QString,QPair<QString,QString>> GetLocalType(QString,QMap<QString, QPair<QString, QString> >&res);
                                                               //=QMap<QString, QPair<QString, QString>>());//获得本地变量的类型
     static QList<QMap<QString,QString>> ToBreakPointInfo(QString);
+    static QList<QMap<QString,QString>> ToStackInfo(QString);
+
     static QString ToCurrentFileName(QString);
     static QList<QString> FindBreakPoint(QString);
     static QList<QString> FindLocalPos(QString);

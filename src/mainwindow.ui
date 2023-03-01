@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>973</width>
+    <width>1412</width>
     <height>773</height>
    </rect>
   </property>
@@ -14,8 +14,8 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
      <widget class="QSplitter" name="splittermain">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -73,41 +73,7 @@
             <attribute name="title">
              <string>Locals</string>
             </attribute>
-            <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="0">
-              <widget class="QTreeWidget" name="localsTreeWidget">
-               <property name="columnCount">
-                <number>4</number>
-               </property>
-               <column>
-                <property name="text">
-                 <string>Name</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Arg</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Value</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Used</string>
-                </property>
-               </column>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="loggerWidget">
-            <attribute name="title">
-             <string>Logger</string>
-            </attribute>
-            <layout class="QGridLayout" name="gridLayout_3">
+            <layout class="QGridLayout" name="gridLayout_5">
              <item row="0" column="0">
               <layout class="QHBoxLayout" name="horizontalLayout">
                <item>
@@ -138,20 +104,10 @@
               </layout>
              </item>
              <item row="1" column="0">
-              <widget class="QTreeWidget" name="variablesTreeWidget">
+              <widget class="QTreeWidget" name="localsTreeWidget">
                <property name="columnCount">
                 <number>4</number>
                </property>
-               <column>
-                <property name="text">
-                 <string>ID</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Timestamp</string>
-                </property>
-               </column>
                <column>
                 <property name="text">
                  <string>Name</string>
@@ -159,7 +115,17 @@
                </column>
                <column>
                 <property name="text">
+                 <string>Arg</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
                  <string>Value</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Used</string>
                 </property>
                </column>
               </widget>
@@ -198,6 +164,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="currentIndex">
+            <number>1</number>
            </property>
            <widget class="QWidget" name="breakpointsWidget">
             <attribute name="title">
@@ -345,6 +314,68 @@
              </item>
             </layout>
            </widget>
+           <widget class="QWidget" name="loggerWidget">
+            <property name="contextMenuPolicy">
+             <enum>Qt::DefaultContextMenu</enum>
+            </property>
+            <property name="accessibleName">
+             <string>log</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>log</string>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <attribute name="title">
+             <string>Log</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_10">
+             <item row="0" column="0">
+              <widget class="LogDialog" name="LogWidget"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="stackWidget">
+            <attribute name="title">
+             <string>stack</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_9">
+             <item row="0" column="0">
+              <layout class="QGridLayout" name="gridLayout_8">
+               <item row="0" column="0">
+                <widget class="QTreeWidget" name="StackTreeWidget">
+                 <column>
+                  <property name="text">
+                   <string>level</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>func</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>line</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>arg</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>file</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
           </widget>
          </widget>
         </item>
@@ -354,6 +385,180 @@
        <property name="title">
         <string/>
        </property>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <widget class="QWidget" name="rightTabWidget">
+           <attribute name="title">
+            <string>PaintArea</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="100,1,1">
+            <item>
+             <widget class="MyPaint" name="PaintWidget" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPlainTextEdit" name="plainTextEditPaintLog">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QPushButton" name="pushButtonLoadPic">
+                <property name="text">
+                 <string>Load</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonSavePic">
+                <property name="text">
+                 <string>Save</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonClearAll">
+                <property name="text">
+                 <string>ClearAll</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="RecordAudioWidget">
+           <attribute name="title">
+            <string>RecordAudio</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QPushButton" name="pushButtonStartRecord">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>StartRecord</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonStopRecord">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>StopRecord</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QPushButton" name="pushButtonStartPlay">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>StartPlay</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonStopPlay">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>StopPlay</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="TimerWidget" name="RecordTimerWidget" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPlainTextEdit" name="plainTextEditAudioLog">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -364,8 +569,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>973</width>
-     <height>25</height>
+     <width>1412</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -373,37 +578,31 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_Folder"/>
+    <addaction name="actionsave"/>
+    <addaction name="actionsavesomewhere"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
-   </widget>
-   <widget class="QMenu" name="menuControl">
-    <property name="title">
-     <string>Control</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
+    <addaction name="actioncompile"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
+   <widget class="QMenu" name="menuls">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionExport_File"/>
+    <addaction name="actionImport_File"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuControl"/>
-   <addaction name="menuView"/>
-   <addaction name="menuSettings"/>
+   <addaction name="menuls"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -421,7 +620,6 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionRun"/>
-   <addaction name="actionStart"/>
    <addaction name="actionContinue"/>
    <addaction name="actionNext"/>
    <addaction name="actionStep"/>
@@ -486,12 +684,70 @@
     <string>Open Folder</string>
    </property>
   </action>
+  <action name="actioncompile">
+   <property name="text">
+    <string>Compile</string>
+   </property>
+  </action>
+  <action name="actionsave1">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="actionsavesomewhere1">
+   <property name="text">
+    <string>另存为</string>
+   </property>
+  </action>
+  <action name="actionsave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionsavesomewhere">
+   <property name="text">
+    <string>Save As</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionExport_File">
+   <property name="text">
+    <string>Export File</string>
+   </property>
+  </action>
+  <action name="actionImport_File">
+   <property name="text">
+    <string>Import File</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>TextEditor</class>
    <extends>QTabWidget</extends>
-   <header location="global">texteditor.h</header>
+   <header>texteditor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LogDialog</class>
+   <extends>QTabWidget</extends>
+   <header location="global">logdialog.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MyPaint</class>
+   <extends>QWidget</extends>
+   <header>mypaint.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TimerWidget</class>
+   <extends>QWidget</extends>
+   <header>timerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
