@@ -10,11 +10,14 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPalette>
+#include <QPlainTextEdit>
 #include <QPoint>
 #include <QTextEdit>
 #include <QToolBar>
 #include <QVector>
 #include <QWidget>
+
+#include "texteditor.h"
 
 class MyPaint : public QWidget {
   Q_OBJECT
@@ -30,6 +33,10 @@ class MyPaint : public QWidget {
 
  public:
  private:
+  QPlainTextEdit *m_plaintextedit_log;
+  QString kSavePath;
+  QString m_open_filename;
+  TextEditor *m_texteditor;
   int _lpress;        // 左键按下标志
   int _drag;          // 拖拽标志
   int _drawType;      // 描绘类型
@@ -46,6 +53,13 @@ class MyPaint : public QWidget {
   QVector<QPoint> _tpoint;          // 文字位置集合
   QVector<int> _shape;              // 图形类型集合，用于撤回功能
   QPoint _begin;  // 鼠标按下坐标、用于最后一个图形移动
+  void SetFilename(QString filename) { m_open_filename = filename; }
+  void SetTextEditor(TextEditor *texteditor) { m_texteditor = texteditor; }
+  void SetPlainTextLog(QPlainTextEdit *plaintextedit) {
+    m_plaintextedit_log = plaintextedit;
+  }
+  void LoadPic();  // 打开图片
+  void PaintLog(QString content);
  signals:
 
  public slots:
@@ -54,7 +68,6 @@ class MyPaint : public QWidget {
   void Rects();     // 画矩形
   void Ellipses();  // 画椭圆
   void Line();      // 画直线
-  void OpenPic();   // 打开图片
   void Texts();     // 文字
   void AddTexts();  // 添加文字
   void Cancel();    // 撤销

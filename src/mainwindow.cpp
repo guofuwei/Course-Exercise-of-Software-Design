@@ -9,14 +9,16 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+    : QMainWindow(parent), ui(new Ui::MainWindow)
+{
   ui->setupUi(this);
   this->init();
 }
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::init() {
+void MainWindow::init()
+{
   // 调整ui样式
   ui->splittermain->setSizes(QList<int>()
                              << this->width() * 1 / 4 << this->width() * 1 / 2
@@ -42,6 +44,12 @@ void MainWindow::init() {
   ui->RecordTimerWidget->showTime();
   m_audio_record =
       new AudioRecord(ui->plainTextEditAudioLog, ui->RecordTimerWidget);
+  // 为了保存图片和音频的设置
+  m_audio_record->SetTextEditor(ui->GuiTextEditor);
+  ui->PaintWidget->SetTextEditor(ui->GuiTextEditor);
+  ui->PaintWidget->SetPlainTextLog(ui->plainTextEditPaintLog);
+  ui->plainTextEditAudioLog->setReadOnly(true);
+  ui->plainTextEditPaintLog->setReadOnly(true);
   //  连接信号函数
   connect(this, &MainWindow::runprogram, this->m_progress,
           &GDbProgress::on_runprogram);
@@ -95,21 +103,24 @@ void MainWindow::EnableAll() {
 
 }
 
-void MainWindow::CompileCode(QString filepath, QStringList extra) {
+void MainWindow::CompileCode(QString filepath, QStringList extra)
+{
   CompilerProcess *t = new CompilerProcess(filepath);
   connect(t, &CompilerProcess::setlog, this->ui->LogWidget,
           &LogDialog::on_setcontent);
-  if (!t->check()) {
+  if (!t->check())
+  {
     return;
   }
   auto index = this->ui->GuiTextEditor->currentIndex();
   auto data = this->ui->GuiTextEditor->GetContent(index);
   auto sourcefile = QFile(m_sourceFilename);
-  if (!sourcefile.open(QIODevice::ReadWrite|QIODevice::Truncate)) {
+  if (!sourcefile.open(QIODevice::ReadWrite | QIODevice::Truncate))
+  {
     emit setlog(QString("[main] 无法打开") + m_sourceFilename);
     return;
   }
-  qDebug()<<sourcefile.write(data);
+  qDebug() << sourcefile.write(data);
   sourcefile.close();
   t->compile();
   // https://www.coder.work/article/6491894
@@ -119,15 +130,18 @@ void MainWindow::CompileCode(QString filepath, QStringList extra) {
   t->deleteLater();
 }
 
-void MainWindow::CompileCurrentPage() {
+void MainWindow::CompileCurrentPage()
+{
   auto index = this->ui->GuiTextEditor->currentIndex();
-  if (index == -1) {
+  if (index == -1)
+  {
     emit setlog("[main] CompileCurrentPage 无打开页面");
     return;
   }
   auto filename = this->ui->GuiTextEditor->tabText(index);
   if (QFileInfo(filename).suffix() != "cpp" |
-      QFileInfo(filename).suffix() != "c") {
+      QFileInfo(filename).suffix() != "c")
+  {
     emit setlog("[main] CompileCurrentPage 文件不为cpp或c");
     return;
   }
@@ -135,10 +149,12 @@ void MainWindow::CompileCurrentPage() {
   // this->ui->GuiTextEditor->m_scilist.at()
 }
 
-void MainWindow::BreakPointTreeWidgetUpdate() {
+void MainWindow::BreakPointTreeWidgetUpdate()
+{
   auto list = this->m_progress->GetBreakPointInfo();
   ui->breakpointsTreeWidget->clear();
-  for (auto breakpoint : list) {
+  for (auto breakpoint : list)
+  {
     QString str;
     QTreeWidgetItem *t = new QTreeWidgetItem();
     t->setText(0, breakpoint["number"]);
@@ -156,10 +172,12 @@ void MainWindow::BreakPointTreeWidgetUpdate() {
   }
 }
 
-void MainWindow::LocalsTreeWidgetUpdate() {
+void MainWindow::LocalsTreeWidgetUpdate()
+{
   auto map = this->m_progress->GetLocalInfo();
   ui->localsTreeWidget->clear();
-  for (auto iter = map.begin(); iter != map.end(); iter++) {
+  for (auto iter = map.begin(); iter != map.end(); iter++)
+  {
     QTreeWidgetItem *t = new QTreeWidgetItem();
     t->setText(0, iter.key());
     t->setText(1, iter.value().second);
@@ -170,19 +188,19 @@ void MainWindow::LocalsTreeWidgetUpdate() {
 
 void MainWindow::StackTreeWidgetUpdate()
 {
-    auto map = this->m_progress->GetStackInformation();
-    ui->StackTreeWidget->clear();
-    for (auto stackinfo:map)
-    {
-      QTreeWidgetItem *t = new QTreeWidgetItem();
-      t->setText(0, stackinfo["level"]);
-      t->setText(1, stackinfo["func"]);
-      t->setText(2, stackinfo["line"]);
-      t->setText(3, stackinfo["arg"]);
-      t->setText(4, stackinfo["file"]);
+  auto map = this->m_progress->GetStackInformation();
+  ui->StackTreeWidget->clear();
+  for (auto stackinfo : map)
+  {
+    QTreeWidgetItem *t = new QTreeWidgetItem();
+    t->setText(0, stackinfo["level"]);
+    t->setText(1, stackinfo["func"]);
+    t->setText(2, stackinfo["line"]);
+    t->setText(3, stackinfo["arg"]);
+    t->setText(4, stackinfo["file"]);
 
-      ui->StackTreeWidget->addTopLevelItem(t);
-    }
+    ui->StackTreeWidget->addTopLevelItem(t);
+  }
 }
 
 void MainWindow::on_actionRun_triggered() { emit runprogram(); }
@@ -191,10 +209,12 @@ void MainWindow::on_actionNext_triggered() { emit next(); }
 
 void MainWindow::on_actionStep_triggered() { emit step(); }
 
-void MainWindow::on_actionOpen_Folder_triggered() {
+void MainWindow::on_actionOpen_Folder_triggered()
+{
   QStringList sourceFilePatterns = QStringList({"*.cpp", "*.c", "*.cc"});
   QStringList headerFilePatterns = QStringList({"*.hpp", "*.h"});
-  QString filename = QFileDialog::getExistingDirectory(this,"open ","F:\\tool\\minGw\\code");
+  QString filename =
+      QFileDialog::getExistingDirectory(this, "open ", "F:\\tool\\minGw\\code");
   //  qDebug() << filename << endl;
   m_workdir = filename;
   QDir *dir = new QDir(filename);
@@ -209,110 +229,138 @@ void MainWindow::on_actionOpen_Folder_triggered() {
   QTreeWidgetItem *topHeaderItem = new QTreeWidgetItem();
   topHeaderItem->setText(0, "HeaderFiles");
   ui->sourceTreeWidget->addTopLevelItem(topHeaderItem);
-  for (int i = 0; i < fileInfo->count(); i++) {
+  for (int i = 0; i < fileInfo->count(); i++)
+  {
     if (fileInfo->at(i).fileName() == "." ||
-        fileInfo->at(i).fileName() == "..") {
+        fileInfo->at(i).fileName() == "..")
+    {
       continue;
     }
     QTreeWidgetItem *item = new QTreeWidgetItem();
     item->setText(1, fileInfo->at(i).fileName());
     if (Cesd::matches(sourceFilePatterns, fileInfo->at(i).fileName(),
-                      QRegExp::Wildcard)) {
+                      QRegExp::Wildcard))
+    {
       topSourceItem->addChild(item);
-    } else if (Cesd::matches(headerFilePatterns, fileInfo->at(i).fileName(),
-                             QRegExp::Wildcard)) {
+    }
+    else if (Cesd::matches(headerFilePatterns, fileInfo->at(i).fileName(),
+                           QRegExp::Wildcard))
+    {
       topHeaderItem->addChild(item);
     }
   }
 }
 
 void MainWindow::on_sourceTreeWidget_itemDoubleClicked(QTreeWidgetItem *item,
-                                                       int column) {
+                                                       int column)
+{
   QString fullFilename = m_workdir + "/" + item->text(1);
   // QString fullFilename = m_workdir + "/" + item->text(column);
-  //qDebug() << fullFilename << endl;
+  // qDebug() << fullFilename << endl;
   ui->GuiTextEditor->readfromfile(fullFilename);
 }
 void MainWindow::on_actionFinish_triggered() { emit finish(); }
 
-void MainWindow::on_listfile(QString name, int line, int index) {
+void MainWindow::on_listfile(QString name, int line, int index)
+{
   auto content = this->m_progress->listcode();
   auto i = this->ui->GuiTextEditor->currentIndex();
   this->ui->GuiTextEditor->setcontent(content, i);
   this->ui->GuiTextEditor->on_setpostion(name, line, index);
 }
 
-void MainWindow::on_tablechange(QString filepath) {
+void MainWindow::on_tablechange(QString filepath)
+{
   m_sourceFilename = filepath;
-  qDebug() << m_sourceFilename;
+  QFileInfo fileInfo = QFileInfo(filepath);
+  ui->PaintWidget->SetFilename(fileInfo.fileName());
+  m_audio_record->SetFilename(fileInfo.fileName());
+  //  qDebug() << m_sourceFilename;
 }
 
-void MainWindow::on_programload() {
+void MainWindow::on_programload()
+{
   this->EnableAll();
   this->ui->breakpointsTreeWidget->clear();
   this->ui->localsTreeWidget->clear();
   this->ui->statusbar->showMessage(m_sourceFilename);
   this->ui->GuiTextEditor->removeallbreakpoint();
 }
-void MainWindow::on_update() {
+void MainWindow::on_update()
+{
   BreakPointTreeWidgetUpdate();
   LocalsTreeWidgetUpdate();
   StackTreeWidgetUpdate();
-  //this->ui->GuiTextEditor->addannotate(2,"hello");
-  //m_progress->GetStackInformation();
+  // this->ui->GuiTextEditor->addannotate(2,"hello");
+  // m_progress->GetStackInformation();
   qDebug() << m_progress->state();
 }
 void MainWindow::on_actionContinue_triggered() { emit continueprogram(); }
 
-void MainWindow::on_actioncompile_triggered() {
+void MainWindow::on_actioncompile_triggered()
+{
   this->CompileCode(m_sourceFilename);
 }
 
 void MainWindow::on_pushButtonSavePic_clicked() { ui->PaintWidget->SavePic(); }
 
-void MainWindow::on_pushButtonClearAll_clicked() {
+void MainWindow::on_pushButtonClearAll_clicked()
+{
   ui->PaintWidget->ClearAll();
 }
-void MainWindow::on_pushButtonStartRecord_clicked() {
-  if (ui->RecordTimerWidget->IsRun()) {
+void MainWindow::on_pushButtonStartRecord_clicked()
+{
+  if (ui->RecordTimerWidget->IsRun())
+  {
     m_audio_record->AudioLog("已开始录音，请勿重复点击\n");
     return;
   }
-  if (!m_audio_record->StartRecording()) {
+  if (!m_audio_record->StartRecording())
+  {
     return;
   }
   ui->RecordTimerWidget->reset();
   ui->RecordTimerWidget->start();
 }
-void MainWindow::on_pushButtonStopRecord_clicked() {
-  if (!ui->RecordTimerWidget->IsRun()) {
+void MainWindow::on_pushButtonStopRecord_clicked()
+{
+  if (!ui->RecordTimerWidget->IsRun())
+  {
     m_audio_record->AudioLog("当前状态未录音\n");
     return;
   }
-  if (!m_audio_record->StopRecording()) {
+  if (!m_audio_record->StopRecording())
+  {
     return;
   }
   ui->RecordTimerWidget->reset();
 }
 
-void MainWindow::on_pushButtonStartPlay_clicked() {
-  if (ui->RecordTimerWidget->IsRun()) {
+void MainWindow::on_pushButtonStartPlay_clicked()
+{
+  if (ui->RecordTimerWidget->IsRun())
+  {
     m_audio_record->AudioLog("已开始播放，请勿重复点击\n");
     return;
   }
-  if (!m_audio_record->StartPlaying()) {
+  if (!m_audio_record->StartPlaying())
+  {
+    m_audio_record->AudioLog("暂时没有音频文件\n");
     return;
   }
   ui->RecordTimerWidget->reset();
   ui->RecordTimerWidget->start();
 }
 
-void MainWindow::on_pushButtonStopPlay_clicked() {
-  if (!ui->RecordTimerWidget->IsRun()) {
+void MainWindow::on_pushButtonStopPlay_clicked()
+{
+  if (!ui->RecordTimerWidget->IsRun())
+  {
     m_audio_record->AudioLog("当前状态未播放\n");
     return;
   }
-  if (!m_audio_record->StopPlaying()) {
+  if (!m_audio_record->StopPlaying())
+  {
     return;
   }
   ui->RecordTimerWidget->reset();
@@ -320,57 +368,73 @@ void MainWindow::on_pushButtonStopPlay_clicked() {
 
 void MainWindow::on_variableDeleteToolButton_clicked()
 {
-    //this->ui->GuiTextEditor->replacecurrentannotate("hhh");
-    //this->ui->GuiTextEditor->addcurrentannotate("hi");
-    auto text=ui->variableAddLineEdit->text();
-    if(text.isEmpty())
-        return;
-    auto Value=this->m_progress->GetExpression(text);
-    if(Value.isEmpty())
-    {
-        return;
-    }
-    QTreeWidgetItem *t = new QTreeWidgetItem();
-    t->setText(0, text);
-    t->setText(2, Value);
-    ui->localsTreeWidget->addTopLevelItem(t);
-
+  // this->ui->GuiTextEditor->replacecurrentannotate("hhh");
+  // this->ui->GuiTextEditor->addcurrentannotate("hi");
+  auto text = ui->variableAddLineEdit->text();
+  if (text.isEmpty())
+    return;
+  auto Value = this->m_progress->GetExpression(text);
+  if (Value.isEmpty())
+  {
+    return;
+  }
+  QTreeWidgetItem *t = new QTreeWidgetItem();
+  t->setText(0, text);
+  t->setText(2, Value);
+  ui->localsTreeWidget->addTopLevelItem(t);
 }
 
 void MainWindow::on_actionsave_triggered()
 {
-    if(this->ui->GuiTextEditor->count()<=0)
-    {
-        QMessageBox::critical(this,"","未打开文件");
-        return;
-    }
-    auto index=this->ui->GuiTextEditor->currentIndex();
-    auto filename=this->ui->GuiTextEditor->getfilename(index);
-    if(QMessageBox::question(this,"",QString("是否保存文件 ")+filename)==QMessageBox::Yes)
-    {
-        auto file=QFile(filename);
-        if(!file.open(QIODevice::ReadWrite|QIODevice::Truncate))
-            QMessageBox::critical(this,"","文件打开失败");
-        file.write(this->ui->GuiTextEditor->GetContent(index));
-        file.close();
-    };
-
+  if (this->ui->GuiTextEditor->count() <= 0)
+  {
+    QMessageBox::critical(this, "", "未打开文件");
+    return;
+  }
+  auto index = this->ui->GuiTextEditor->currentIndex();
+  auto filename = this->ui->GuiTextEditor->getfilename(index);
+  if (QMessageBox::question(this, "", QString("是否保存文件 ") + filename) == QMessageBox::Yes)
+  {
+    auto file = QFile(filename);
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Truncate))
+      QMessageBox::critical(this, "", "文件打开失败");
+    file.write(this->ui->GuiTextEditor->GetContent(index));
+    file.close();
+  };
 }
 
 void MainWindow::on_actionsavesomewhere_triggered()
 {
-    if(this->ui->GuiTextEditor->count()<=0)
-    {
-        QMessageBox::critical(this,"","未打开文件");
-        return;
-    }
-    auto index=this->ui->GuiTextEditor->currentIndex();
-    auto filepath=QFileDialog::getSaveFileName();
-    auto file=QFile(filepath);
-    if(filepath.isEmpty())
-        return ;
-    if(!file.open(QIODevice::ReadWrite))
-        QMessageBox::critical(this,"","文件打开失败");
-    file.write(this->ui->GuiTextEditor->GetContent(index));
-    file.close();
+  if (this->ui->GuiTextEditor->count() <= 0)
+  {
+    QMessageBox::critical(this, "", "未打开文件");
+    return;
+  }
+  auto index = this->ui->GuiTextEditor->currentIndex();
+  auto filepath = QFileDialog::getSaveFileName();
+  auto file = QFile(filepath);
+  if (filepath.isEmpty())
+    return;
+  if (!file.open(QIODevice::ReadWrite))
+    QMessageBox::critical(this, "", "文件打开失败");
+  file.write(this->ui->GuiTextEditor->GetContent(index));
+  file.close();
 }
+
+void MainWindow::on_pushButtonTest_clicked()
+{
+  //  qDebug() << ui->GuiTextEditor->getcurrentannotate();
+  QDateTime current_date_time = QDateTime::currentDateTime();
+  QString current_date = current_date_time.toString("yyyy_MM_dd_hh_mm_ss");
+  //  qDebug() << current_date;
+  if (ui->GuiTextEditor->getcurrentannotate().endsWith(";\r\n"))
+  {
+    ui->GuiTextEditor->addcurrentannotate("//");
+  }
+  if (ui->GuiTextEditor->getcurrentannotate() != "")
+  {
+    ui->GuiTextEditor->addcurrentannotate("test");
+  }
+}
+
+void MainWindow::on_pushButtonLoadPic_clicked() { ui->PaintWidget->LoadPic(); }
