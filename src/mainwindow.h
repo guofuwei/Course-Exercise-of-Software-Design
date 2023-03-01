@@ -2,10 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QSplitter>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
-#include <QMessageBox>
 
 // #include "texteditor.h"//ui包含
 #include "audiorecord.h"
@@ -16,17 +16,15 @@
 #include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
-namespace Ui
-{
-  class MainWindow;
+namespace Ui {
+class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
   void init();
@@ -38,7 +36,7 @@ public:
   void LocalsTreeWidgetUpdate();
   void StackTreeWidgetUpdate();
 
-private slots:
+ private slots:
   void on_actionRun_triggered();
   void on_actionNext_triggered();
   void on_actionStep_triggered();
@@ -74,11 +72,11 @@ private slots:
 
   void on_actionsavesomewhere_triggered();
 
-  void on_pushButtonTest_clicked();
-
   void on_pushButtonLoadPic_clicked();
 
-signals:
+  void on_actionAbout_Qt_triggered();
+
+ signals:
 
   void runprogram();
   void next();
@@ -87,7 +85,7 @@ signals:
   void continueprogram();
   void setlog(QString);
 
-private:
+ private:
   Ui::MainWindow *ui;
   GDbProgress *m_progress;
   QString m_sourceFilename;
@@ -96,4 +94,4 @@ private:
 
   AudioRecord *m_audio_record;
 };
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H

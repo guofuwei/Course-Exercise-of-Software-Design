@@ -22,10 +22,9 @@
 
 // #include "gdbprogress.h"
 
-class TextEditor : public QTabWidget
-{
+class TextEditor : public QTabWidget {
   Q_OBJECT
-public:
+ public:
   TextEditor(QWidget *parent = nullptr);
   // void init();
   void initsci();
@@ -41,21 +40,22 @@ public:
   QString getcurrentannotate();
   QString getfilename(int index);
   QByteArray GetContent(int index = -1);
+  void SaveContent();
 
-private slots:
+ private slots:
   void on_margin_clicked(int, int, Qt::KeyboardModifiers);
   void on_table_close(int index);
   void on_table_change(int index);
-public slots:
+ public slots:
   void on_setpostion(QString name, int line, int index = -1);
   void on_sendcontent(QString, QString, int, int);
-signals:
+ signals:
   void listcodeforcurrentfile(QString, int, int);
   void addbreakpoint(QString, int);
   void removebreakpoint(QString, int);
   void sourcefilechange(QString);
 
-private:
+ private:
   QPlainTextEdit *m_editor;
   bool m_iseditable;
   QWidget *m_mainwidget;
@@ -68,4 +68,4 @@ private:
   QImage m_imagerihtarrow;
 };
 
-#endif // TEXTEDITOR_H
+#endif  // TEXTEDITOR_H

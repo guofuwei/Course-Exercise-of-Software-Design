@@ -316,23 +316,26 @@ void MyPaint::SavePic() {
   QString current_date = current_date_time.toString("yyyy_MM_dd_hh_mm_ss");
   QString fullfilename =
       kSavePath + "/" + m_open_filename + "-" + current_date + ".jpg";
-  QString code = m_texteditor->getcurrentannotate();
-  //  if (code == "") return;
-  //  //  qDebug() << "code:" << code << endl;
-  //  int start_pos = Cesd::GetCommentStartPos(code, 1);
-  //  int stop_pos = -1;
-  //  if (start_pos != -1) {
-  //    stop_pos = Cesd::GetCommentStopPos(code, start_pos);
-  //    QString pic_comment = code.mid(start_pos, stop_pos - start_pos + 1);
-  //    //    qDebug() << "Pic Comment:" << pic_comment;
-  //  }
-  // 添加图片注释
   QString comment =
       QString("[COMMENT-PIC-%1-%2]").arg(m_open_filename).arg(current_date);
-  if (code.endsWith(";\r\n")) {
-    m_texteditor->addcurrentannotate("//");
+  // 添加图片注释
+  QString code = m_texteditor->getcurrentannotate();
+  if (code == "") return;
+  int start_pos = Cesd::GetCommentStartPos(code, 1);
+  int stop_pos = -1;
+  if (start_pos != -1) {
+    stop_pos = Cesd::GetCommentStopPos(code);
+    QString pic_comment = code.mid(start_pos, stop_pos - start_pos + 1);
+    code.replace(start_pos, stop_pos - start_pos + 1, comment);
+    //    qDebug() << "aftre replace code:" << code;
+    m_texteditor->replacecurrentannotate(code);
+  } else {
+    if (code.endsWith(";\r\n")) {
+      m_texteditor->addcurrentannotate("//");
+    }
+    m_texteditor->addcurrentannotate(comment);
   }
-  m_texteditor->addcurrentannotate(comment);
+  m_texteditor->SaveContent();
   // 保存图片至$ROOT/comment/pic
   if (fullfilename.length() > 0) {
     _tEdit->hide();  // 防止文本输入框显示时，将文本框保存到图片
@@ -343,6 +346,9 @@ void MyPaint::SavePic() {
     this->render(&painter);  // 将窗体渲染到painter，再由painter画到画布
     pixmap.copy(QRect(0, 30, size().width(), size().height() - 32))
         .save(fullfilename);  // 不包含工具栏
+    PaintLog("Pic Save success");
+  } else {
+    PaintLog("Pic Save fail");
   }
 }
 
