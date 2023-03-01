@@ -23,9 +23,9 @@ int GetCommentStartPos(QString code, int type) {
     return -1;
   }
 }
-int GetCommentStopPos(QString code) {
+int GetCommentStopPos(QString code, int start_pos) {
   //  qDebug() << code.lastIndexOf("]");
-  return code.lastIndexOf("]");
+  return code.indexOf("]", start_pos);
 }
 
 QList<QString> ParseComment(QString comment, int type) {

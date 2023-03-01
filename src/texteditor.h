@@ -41,6 +41,7 @@ class TextEditor : public QTabWidget {
   QString getfilename(int index);
   QByteArray GetContent(int index = -1);
   void SaveContent();
+  QList<QString> getlines();
 
  private slots:
   void on_margin_clicked(int, int, Qt::KeyboardModifiers);

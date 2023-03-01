@@ -87,7 +87,7 @@ bool AudioRecord::StartRecording() {
     int start_pos = Cesd::GetCommentStartPos(code, 2);
     int stop_pos = -1;
     if (start_pos != -1) {
-      stop_pos = Cesd::GetCommentStopPos(code);
+      stop_pos = Cesd::GetCommentStopPos(code, start_pos);
       //      QString pic_comment = code.mid(start_pos, stop_pos - start_pos +
       //      1);
       code.replace(start_pos, stop_pos - start_pos + 1, comment);
@@ -159,14 +159,14 @@ bool AudioRecord::StartPlaying() {
   qDebug() << "code:" << code;
   int start_pos = Cesd::GetCommentStartPos(code, 2);
   if (start_pos == -1) return false;
-  int stop_pos = Cesd::GetCommentStopPos(code);
+  int stop_pos = Cesd::GetCommentStopPos(code, start_pos);
   QString audio_comment = code.mid(start_pos, stop_pos - start_pos + 1);
-  qDebug() << "Audio Comment:" << audio_comment;
+  //  qDebug() << "Audio Comment:" << audio_comment;
   QList<QString> parse_result = Cesd::ParseComment(audio_comment, 2);
   // test
-  for (const auto& one : parse_result) {
-    qDebug() << "Parse str:" << one;
-  }
+  //  for (const auto& one : parse_result) {
+  //    qDebug() << "Parse str:" << one;
+  //  }
   m_source_filename = parse_result[0] + "-" + parse_result[1] + ".pcm";
   qDebug() << "m_source_filename:" << m_source_filename;
   //  return false;

@@ -299,3 +299,15 @@ void TextEditor::SaveContent() {
   file.write(this->GetContent(index));
   file.close();
 }
+
+QList<QString> TextEditor::getlines() {
+  if (this->count() <= 0) {
+    return QList<QString>();
+  }
+  QList<QString> list;
+  auto index = this->currentIndex();
+  for (int i = 0; i < this->m_scilist.at(index)->lines(); i++) {
+    list.append(this->m_scilist.at(index)->text(i));
+  }
+  return list;
+}

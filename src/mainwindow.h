@@ -76,6 +76,10 @@ class MainWindow : public QMainWindow {
 
   void on_actionAbout_Qt_triggered();
 
+  void on_actionExport_File_triggered();
+
+  void on_actionImport_File_triggered();
+
  signals:
 
   void runprogram();

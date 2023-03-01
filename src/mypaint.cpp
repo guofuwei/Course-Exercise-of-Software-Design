@@ -40,7 +40,8 @@ MyPaint::MyPaint(QWidget *parent) : QWidget(parent) {
   tbar->addAction(saveAction);  // 添加到工具栏
   /*  QAction *saveasAction = new QAction(tr("&另存为"), this);  // 保存动作
     saveasAction->setIcon(QIcon(":/resources/PaintImg/saveas.png"));  // 图标
-    tbar->addAction(saveasAction); */                        // 添加到工具栏
+    tbar->addAction(saveasAction); */
+  // 添加到工具栏
   QAction *lineAction = new QAction(tr("&直线"), this);         // 直线动作
   lineAction->setIcon(QIcon(":/resources/PaintImg/line.png"));  // 图标
   tbar->addAction(lineAction);                            // 添加到工具栏
@@ -324,7 +325,7 @@ void MyPaint::SavePic() {
   int start_pos = Cesd::GetCommentStartPos(code, 1);
   int stop_pos = -1;
   if (start_pos != -1) {
-    stop_pos = Cesd::GetCommentStopPos(code);
+    stop_pos = Cesd::GetCommentStopPos(code, start_pos);
     QString pic_comment = code.mid(start_pos, stop_pos - start_pos + 1);
     code.replace(start_pos, stop_pos - start_pos + 1, comment);
     //    qDebug() << "aftre replace code:" << code;
@@ -346,36 +347,31 @@ void MyPaint::SavePic() {
     this->render(&painter);  // 将窗体渲染到painter，再由painter画到画布
     pixmap.copy(QRect(0, 30, size().width(), size().height() - 32))
         .save(fullfilename);  // 不包含工具栏
-    PaintLog("Pic Save success");
+    PaintLog("图片保存成功\n");
   } else {
-    PaintLog("Pic Save fail");
+    PaintLog("图片保存失败\n");
   }
 }
 
 void MyPaint::LoadPic() {
-  // 弹出文件打开对话框
-  //  QString picPath = QFileDialog::getOpenFileName(this, tr("打开"), "",
-  //                                                 "Image Files(*.jpg
-  //
-  //                                           *.png)");
   QString code = m_texteditor->getcurrentannotate();
   if (code == "") return;
-  qDebug() << "code:" << code;
+  //  qDebug() << "code:" << code;
   int start_pos = Cesd::GetCommentStartPos(code, 1);
   if (start_pos == -1) return;
-  int stop_pos = Cesd::GetCommentStopPos(code);
+  int stop_pos = Cesd::GetCommentStopPos(code, start_pos);
   QString pic_comment = code.mid(start_pos, stop_pos - start_pos + 1);
-  qDebug() << "Pic Comment:" << pic_comment;
+  //  qDebug() << "Pic Comment:" << pic_comment;
   QList<QString> parse_result = Cesd::ParseComment(pic_comment, 1);
   // test
-  for (const auto &one : parse_result) {
-    qDebug() << "Parse str:" << one;
-  }
+  //  for (const auto &one : parse_result) {
+  //    qDebug() << "Parse str:" << one;
+  //  }
 
   QString filename = parse_result[0] + "-" + parse_result[1] + ".jpg";
-  qDebug() << "filename:" << filename;
+  //  qDebug() << "filename:" << filename;
   QString picPath = kSavePath + "/" + filename;
-  qDebug() << "picPath:" << picPath;
+  //  qDebug() << "picPath:" << picPath;
   //  return;
   if (!picPath.isEmpty()) {  // 用户选择了文件
     QPixmap pix;
