@@ -79,14 +79,27 @@ bool AudioRecord::StartRecording() {
     QDateTime current_date_time = QDateTime::currentDateTime();
     QString current_date = current_date_time.toString("yyyy_MM_dd_hh_mm_ss");
     m_dest_filename = m_open_filename + "-" + current_date + ".pcm";
-    // 插入注释
-    QString code = m_texteditor->getcurrentannotate();
     QString comment =
         QString("[COMMENT-AUDIO-%1-%2]").arg(m_open_filename).arg(current_date);
-    if (code.endsWith(";\r\n")) {
-      m_texteditor->addcurrentannotate("//");
+    // 插入注释
+    QString code = m_texteditor->getcurrentannotate();
+    if (code == "") return false;
+    int start_pos = Cesd::GetCommentStartPos(code, 2);
+    int stop_pos = -1;
+    if (start_pos != -1) {
+      stop_pos = Cesd::GetCommentStopPos(code);
+      //      QString pic_comment = code.mid(start_pos, stop_pos - start_pos +
+      //      1);
+      code.replace(start_pos, stop_pos - start_pos + 1, comment);
+      //    qDebug() << "aftre replace code:" << code;
+      m_texteditor->replacecurrentannotate(code);
+    } else {
+      if (code.endsWith(";\r\n")) {
+        m_texteditor->addcurrentannotate("//");
+      }
+      m_texteditor->addcurrentannotate(comment);
     }
-    m_texteditor->addcurrentannotate(comment);
+    m_texteditor->SaveContent();
 
     m_dest_file.setFileName(m_dest_file_path + "/" + m_dest_filename);
     m_dest_file.open(QIODevice::WriteOnly | QIODevice::Truncate);
