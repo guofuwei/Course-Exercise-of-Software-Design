@@ -67,7 +67,7 @@
           </widget>
           <widget class="QTabWidget" name="GuiTabWidgetLeftBottom">
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="LocalsWidget">
             <attribute name="title">
@@ -131,12 +131,6 @@
               </widget>
              </item>
             </layout>
-           </widget>
-           <widget class="QWidget" name="loggerWidget1">
-            <attribute name="title">
-             <string>Logger</string>
-            </attribute>
-            <layout class="QGridLayout" name="gridLayout_3"/>
            </widget>
           </widget>
          </widget>
@@ -334,7 +328,7 @@
              <bool>false</bool>
             </property>
             <attribute name="title">
-             <string>页</string>
+             <string>Log</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_10">
              <item row="0" column="0">

@@ -77,15 +77,23 @@ void MainWindow::init() {
 }
 
 void MainWindow::DisableAll() {
-  this->ui->toolBar->hide();
-  //    this->ui->actionRun->setEnabled(0);
-  //    this->ui->actionContinue->setEnabled(0);
-  //    this->ui->actionNext->setEnabled(0);
-  //    this->ui->actionStep->setEnabled(0);
-  //    this->ui->actionFinish->setEnabled(0);
+  //this->ui->toolBar->hide();
+      this->ui->actionRun->setEnabled(0);
+      this->ui->actionContinue->setEnabled(0);
+      this->ui->actionNext->setEnabled(0);
+      this->ui->actionStep->setEnabled(0);
+      this->ui->actionFinish->setEnabled(0);
 }
 
-void MainWindow::EnableAll() { this->ui->toolBar->show(); }
+void MainWindow::EnableAll() {
+    this->ui->actionRun->setEnabled(1);
+    this->ui->actionContinue->setEnabled(1);
+    this->ui->actionNext->setEnabled(1);
+    this->ui->actionStep->setEnabled(1);
+    this->ui->actionFinish->setEnabled(1);
+
+
+}
 
 void MainWindow::CompileCode(QString filepath, QStringList extra) {
   CompilerProcess *t = new CompilerProcess(filepath);
