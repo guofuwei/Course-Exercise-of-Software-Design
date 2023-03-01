@@ -20,6 +20,7 @@ MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::init() {
   // 调整ui样式
+  this->setWindowTitle("Course-Exercise-of-Software-Design");
   ui->splittermain->setSizes(QList<int>()
                              << this->width() * 1 / 4 << this->width() * 1 / 2
                              << this->width() * 1 / 4);
@@ -29,7 +30,6 @@ void MainWindow::init() {
   this->m_progress = new GDbProgress();
   connect(this, &MainWindow::setlog, this->ui->LogWidget,
           &LogDialog::on_setcontent);
-
   // this->CompileCurrentPage();
 
   //  this->CompileCode("./test.cpp");
@@ -79,7 +79,10 @@ void MainWindow::init() {
           &MainWindow::on_tablechange);
   connect(this->m_progress, &GDbProgress::updatebreakpoint, this,
           &MainWindow::BreakPointTreeWidgetUpdate);
-
+  //  connect(this->m_progress, SIGNAL(readyReadStandardOutput()), this,
+  //          SLOT(on_gdb_readoutput()));
+  //  connect(this->m_progress, SIGNAL(readyReadStandardError()), this,
+  //          SLOT(on_gdb_readerror()));
   // connect(this->ui->GuiTextEditor, &TextEditor::currentChanged,
   // this,&MainWindow::on_table_change);
 }
@@ -477,4 +480,15 @@ void MainWindow::on_actionImport_File_triggered() {
   }
   temp_dir.removeRecursively();
   QMessageBox::information(this, "", "导入成功");
+}
+
+void MainWindow::on_gdb_readoutput() {
+  qDebug() << "on_gdb_readouput";
+  ui->plainTextEditStdOut->insertPlainText(
+      m_progress->readAllStandardOutput().data());
+}
+void MainWindow::on_gdb_readerror() {
+  qDebug() << "on_gdb_readerror";
+  ui->plainTextEditStdOut->insertPlainText(
+      m_progress->readAllStandardError().data());
 }
