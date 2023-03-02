@@ -5,6 +5,7 @@ namespace Cesd {
 bool matches(const QStringList &regexpatterns, const QString &string,
              QRegExp::PatternSyntax syntax) {
   foreach (const auto &regex, regexpatterns) {
+    // 判断字符串是否包含正则内容
     if (string.contains(QRegExp(regex, Qt::CaseSensitive, syntax))) {
       return true;
     }

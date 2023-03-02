@@ -199,24 +199,26 @@ void MainWindow::on_actionNext_triggered() { emit next(); }
 void MainWindow::on_actionStep_triggered() { emit step(); }
 
 void MainWindow::on_actionOpen_Folder_triggered() {
+  // 设置源文件和头文件的正则匹配形式
   QStringList sourceFilePatterns = QStringList({"*.cpp", "*.c", "*.cc"});
   QStringList headerFilePatterns = QStringList({"*.hpp", "*.h"});
-  QString filename =
-      QFileDialog::getExistingDirectory(this, "open ", "F:\\tool\\minGw\\code");
-  //  qDebug() << filename << endl;
+  // 打开文件夹选择对话框
+  QString filename = QFileDialog::getExistingDirectory(this, "open ", "");
   m_workdir = filename;
   QDir *dir = new QDir(filename);
-  //  qDebug() << Cesd::matches(sourceFilePatterns, "aaa.cpp");
+  // 创建筛选器
   QStringList filter;
   QList<QFileInfo> *fileInfo = new QList<QFileInfo>(dir->entryInfoList(filter));
   // 下面进行ui的编写
-  ui->sourceTreeWidget->clear();
+  ui->sourceTreeWidget->clear();  // 清空文件资源管理器
+  // 创建SourceFiles和HeaderFiles两个根节点
   QTreeWidgetItem *topSourceItem = new QTreeWidgetItem();
   topSourceItem->setText(0, "SourceFiles");
   ui->sourceTreeWidget->addTopLevelItem(topSourceItem);
   QTreeWidgetItem *topHeaderItem = new QTreeWidgetItem();
   topHeaderItem->setText(0, "HeaderFiles");
   ui->sourceTreeWidget->addTopLevelItem(topHeaderItem);
+  // 对文件夹中文件进行遍历和分类
   for (int i = 0; i < fileInfo->count(); i++) {
     if (fileInfo->at(i).fileName() == "." ||
         fileInfo->at(i).fileName() == "..") {
@@ -224,6 +226,7 @@ void MainWindow::on_actionOpen_Folder_triggered() {
     }
     QTreeWidgetItem *item = new QTreeWidgetItem();
     item->setText(1, fileInfo->at(i).fileName());
+    // 调用utils.cpp中的matches函数进行匹配筛选
     if (Cesd::matches(sourceFilePatterns, fileInfo->at(i).fileName(),
                       QRegExp::Wildcard)) {
       topSourceItem->addChild(item);
