@@ -166,7 +166,7 @@
             </sizepolicy>
            </property>
            <property name="currentIndex">
-            <number>3</number>
+            <number>2</number>
            </property>
            <widget class="QWidget" name="breakpointsWidget">
             <attribute name="title">
@@ -348,16 +348,6 @@
                 </widget>
                </item>
               </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="stdioWidget">
-            <attribute name="title">
-             <string>stdio</string>
-            </attribute>
-            <layout class="QGridLayout" name="gridLayout_3">
-             <item row="0" column="0">
-              <widget class="QPlainTextEdit" name="plainTextEditStdOut"/>
              </item>
             </layout>
            </widget>
